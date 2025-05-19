@@ -31,35 +31,33 @@ $users = $conn->query("SELECT * FROM user");
 <html>
 <head>
     <title>Kelola Akun</title>
-    <style>
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
-        .action-links a { margin-right: 10px; }
-    </style>
+    <link rel="stylesheet" href="Style.css">
 </head>
 <body>
     <h1>Kelola Akun Pengguna</h1>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Nama Lengkap</th>
-            <th>Aksi</th>
-        </tr>
-        <?php while($user = $users->fetch_assoc()): ?>
-        <tr>
-            <td><?= $user['id'] ?></td>
-            <td><?= htmlspecialchars($user['username']) ?></td>
-            <td><?= htmlspecialchars($user['email']) ?></td>
-            <td><?= htmlspecialchars($user['nama_lengkap']) ?></td>
-            <td class="action-links">
-                <a href="edit_user.php?id=<?= $user['id'] ?>">Edit</a>
-                <a href="?action=delete&id=<?= $user['id'] ?>" 
-                onclick="return confirm('Yakin hapus akun ini?')">Hapus</a>
-            </td>
-        </tr>
-        <?php endwhile; ?>
-    </table>
+    <div class="manage-account">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Nama Lengkap</th>
+                <th>Aksi</th>
+            </tr>
+            <?php while($user = $users->fetch_assoc()): ?>
+            <tr>
+                <td><?= $user['id'] ?></td>
+                <td><?= htmlspecialchars($user['username']) ?></td>
+                <td><?= htmlspecialchars($user['email']) ?></td>
+                <td><?= htmlspecialchars($user['nama_lengkap']) ?></td>
+                <td class="action-links">
+                    <a href="edit_user.php?id=<?= $user['id'] ?>">Edit</a>
+                    <a href="?action=delete&id=<?= $user['id'] ?>" 
+                    onclick="return confirm('Yakin hapus akun ini?')">Hapus</a>
+                </td>
+            </tr>
+            <?php endwhile; ?>
+        </table>
+    </div>
 </body>
 </html>

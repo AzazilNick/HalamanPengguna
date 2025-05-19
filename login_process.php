@@ -1,26 +1,57 @@
 <?php
 session_start();
-$file = 'users.txt';
-$username_or_email = $_POST['username'];
-$password = $_POST['password'];
-$login_success = false;
 
-if (file_exists($file)) {
-    $lines = file($file);
-    foreach ($lines as $line) {
-        list($file_username, $file_email, $file_password) = explode(',', trim($line));
-        if (($file_username === $username_or_email || $file_email === $username_or_email) && $file_password === $password) {
-            $login_success = true;
-            break;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username_or_email = $_POST['username'];
+    $password = $_POST['password'];
+    
+    $host = 'localhost';
+    $dbuser = 'root'; // Sesuaikan dengan username database
+    $dbpass = '';     // Sesuaikan dengan password database
+    $dbname = 'niflix';
+
+    try {
+        // Koneksi database
+        $conn = new mysqli($host, $dbuser, $dbpass, $dbname);
+        
+        if ($conn->connect_error) {
+            throw new Exception("Koneksi gagal: " . $conn->connect_error);
+        }
+
+        // Cari user berdasarkan username atau email
+        $stmt = $conn->prepare("SELECT id, username, password FROM user WHERE username = ? OR email = ?");
+        $stmt->bind_param("ss", $username_or_email, $username_or_email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 1) {
+            $user = $result->fetch_assoc();
+            
+            // Verifikasi password
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user'] = [
+                    'id' => $user['id'],
+                    'username' => $user['username']
+                ];
+                header('Location: dashboard.php');
+                exit();
+            }
+        }
+        
+        // Pesan error generik untuk keamanan
+        $_SESSION['error'] = 'Login gagal! Username/Email atau password salah.';
+        header('Location: login.php');
+        exit();
+
+    } catch (Exception $e) {
+        $_SESSION['error'] = 'Terjadi kesalahan sistem';
+        header('Location: login.php');
+        exit();
+    } finally {
+        // Tutup koneksi
+        if (isset($conn)) {
+            $conn->close();
         }
     }
-}
-
-if ($login_success) {
-    $_SESSION['user'] = $file_username;
-    header('Location: dashboard.php');
-} else {
-    $_SESSION['error'] = 'Login gagal! Username atau password salah.';
-    header('Location: login.php');
 }
 ?>

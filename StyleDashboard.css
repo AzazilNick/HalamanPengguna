@@ -163,10 +163,6 @@ footer {
     transform: scale(1.05); /* Efek zoom saat hover pada item slider */
 }
 
-.slider-item:hover {
-    transform: scale(1.05); /* Efek zoom saat hover pada item slider */
-}
-
 .nav-menu ul li a {
     transition: color .5s, transform .5s;
 }

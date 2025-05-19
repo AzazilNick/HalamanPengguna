@@ -39,6 +39,11 @@
         <button class="menu-toggle">☰</button> <!-- Tombol untuk membuka menu -->
         <nav class="nav-menu">
             <ul>
+            <?php if ($_SESSION['user']['is_admin'] == 1) : ?>
+                <!-- TAMBAHKAN MENU ADMIN -->
+                <li><a href="admin.php">Kelola Akun</a></li>
+            <?php endif; ?>
+
                 <!-- Menu navigasi dengan tautan ke halaman lain -->
                 <li><a href="review_film.php">Review Film</a></li>
                 <li><a href="review_series.php">Review Series</a></li>

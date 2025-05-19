@@ -56,7 +56,7 @@ unset($_SESSION['error']);
                     <button class="submit-btn" id="submit">Sign in</button>
                 </div>
                 <div class="sign-up-link">
-                    <p>Don't have account?<a style="color: blue;" href="register.php"> Register</a></p>
+                    <p>Don't have account?<a href="register.php"> Register</a></p>
                 </div>
             </div>
         </form>

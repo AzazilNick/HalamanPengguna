@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -19,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Cari user berdasarkan username atau email
-        $stmt = $conn->prepare("SELECT id, username, password FROM user WHERE username = ? OR email = ?");
+        $stmt = $conn->prepare("SELECT id, username, password, is_admin FROM user WHERE username = ? OR email = ?");
         $stmt->bind_param("ss", $username_or_email, $username_or_email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -31,7 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user'] = [
                     'id' => $user['id'],
-                    'username' => $user['username']
+                    'username' => $user['username'],
+                    'is_admin' => $user['is_admin'] // AMBIL DATA is_admin DARI DATABASE
                 ];
                 header('Location: dashboard.php');
                 exit();

@@ -162,3 +162,18 @@ header {
     border-radius: 5px;
     text-align: center;
 }
+
+.manage-account table {
+    width: 100%; 
+    border-collapse: collapse;
+}
+
+.manage-account th, td {
+    padding: 8px; 
+    border: 1px solid #ddd; 
+    text-align: left;
+}
+
+.action-links a {
+    margin-right: 10px;
+}

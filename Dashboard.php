@@ -52,7 +52,7 @@
     </header>
 
     <div class="welcome-message">
-        <h2>Welcome, <?=$_SESSION['user']?>!</h2>
+        <h2>Welcome, <?= htmlspecialchars($_SESSION['user']['username']) ?>!</h2>
     </div>
 
     <main>        

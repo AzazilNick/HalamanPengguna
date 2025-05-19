@@ -94,6 +94,10 @@ main {
     border-radius: 8px; /* Memberikan sudut melengkung pada gambar */
 }
 
+.grid-item:hover {
+    transform: scale(1.05); /* Efek zoom saat hover pada grid item */
+}
+
 .grid-item h4 {
     margin: 10px 0; /* Memberikan margin atas dan bawah pada judul */
     font-size: 14px; /* Mengatur ukuran font untuk judul */

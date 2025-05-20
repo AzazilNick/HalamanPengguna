@@ -59,14 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Handle profile photo upload
     $photo_path = $current_user['foto_pengguna'];
     if (isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] == UPLOAD_ERR_OK) {
-        $upload_dir = 'uploads/profile_photos/';
-        if (!file_exists($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
-        }
+        $upload_dir = '';
         
         $file_ext = pathinfo($_FILES['profile_photo']['name'], PATHINFO_EXTENSION);
         $file_name = 'user_' . $user_id . '_' . time() . '.' . $file_ext;
-        $target_file = $upload_dir . $file_name;
+        $target_file = $file_name;
         
         // Check if image file is a actual image
         $check = getimagesize($_FILES['profile_photo']['tmp_name']);
@@ -112,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-include_once('header.php');
+    include_once('header.php');
 ?>
 
 <!DOCTYPE html>
@@ -124,6 +121,7 @@ include_once('header.php');
     <link rel="stylesheet" href="Style.css">
 </head>
 <body>
+    <main>
     <div class="profile-container">
         <div class="profile-header">
             <h1>My Profile</h1>
@@ -139,9 +137,8 @@ include_once('header.php');
         
         <form class="profile-content" method="POST" enctype="multipart/form-data">
             <div class="profile-photo-section">
-                <img src="uploads/profile_photos/<?= htmlspecialchars($current_user['foto_pengguna'] ?? 'default.png') ?>" 
-                     alt="Profile Photo" class="profile-photo" 
-                     onerror="this.src='uploads/profile_photos/default.png'">
+                <img src="<?= htmlspecialchars($current_user['foto_pengguna'] ?? 'default.png') ?>" 
+                     alt="Profile Photo" class="profile-photo">
                 
                 <div class="photo-upload">
                     <label for="profile_photo" style="color: #ffcc00; display: block; margin-bottom: 10px;">
@@ -170,22 +167,20 @@ include_once('header.php');
                     <h3 style="color: #ffcc00; margin-bottom: 15px;">Change Password</h3>
                     
                     <label for="current_password">Current Password</label>
-                    <input type="password" id="current_password" name="current_password">
+                    <br>
+                    <input class="input-new-password" type="password" id="current_password" name="current_password"><br>
                     
                     <label for="new_password">New Password</label>
-                    <input type="password" id="new_password" name="new_password">
+                    <br>
+                    <input class="input-new-password" type="password" id="new_password" name="new_password"><br>
                     
                     <label for="confirm_password">Confirm New Password</label>
-                    <input type="password" id="confirm_password" name="confirm_password">
+                    <br>
+                    <input class="input-new-password" type="password" id="confirm_password" name="confirm_password">
                 </div>
                 
                 <button type="submit" class="btn-update">Update Profile</button>
             </div>
         </form>
     </div>
-</body>
-</html>
-
-<?php
-include_once('footer.php');
-?>
+    <?php include_once('footer.php'); ?>

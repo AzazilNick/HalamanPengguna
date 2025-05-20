@@ -31,3 +31,4 @@ if (session_status() === PHP_SESSION_NONE) {
             </ul>
         </nav>
     </header>
+    <main>

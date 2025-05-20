@@ -77,7 +77,6 @@
             <?php endforeach; ?>
         </div>
     </section>
-
 </body>
 </html>
 

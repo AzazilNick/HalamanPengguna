@@ -88,5 +88,3 @@ $users = $conn->query("SELECT * FROM user");
         </div>
     </main>
     <?php include_once('footer.php'); ?>
-</body>
-</html>

@@ -178,6 +178,8 @@ header {
     margin-right: 10px;
 }
 
+/* Bagian style profile */
+
 @media (min-width: 768px) {
     .profile-content {
         flex-direction: row;  /* Foto dan info side-by-side */

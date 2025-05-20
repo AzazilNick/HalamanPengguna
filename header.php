@@ -31,11 +31,3 @@ if (session_status() === PHP_SESSION_NONE) {
             </ul>
         </nav>
     </header>
-
-    <?php if (isset($_SESSION['user'])) : ?>
-    <div class="welcome-message">
-        <h2>Welcome, <?= htmlspecialchars($_SESSION['user']['username']) ?>!</h2>
-    </div>
-    <?php endif; ?>
-
-    <main>

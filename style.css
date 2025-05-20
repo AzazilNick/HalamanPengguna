@@ -1,0 +1,329 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: url('https://www.notebookcheck.net/fileadmin/Notebooks/News/_nc3/netflixteaser.png') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    animation: backgroundMove 10s ease-in-out infinite;
+}
+
+.Login-Register-box {
+    width: 400px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    margin: 100px auto;
+}
+
+.login-register-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffcc00;
+}
+
+.Input-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #fff;
+    color: #333;
+    font-size: 16px;
+}
+
+.Input-box i {
+    position: absolute;
+    right: 10px;
+    color: #ffcc00;
+    transform: translateY(9px);
+    font-size: 22px;
+}
+
+.forgot {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.forgot a{
+    color: #ffcc00;
+    text-decoration: none;
+}
+
+.Input-submit {
+    text-align: center;
+    font-size: 2rem;
+    color: #ffffff;
+    position: relative;
+    display: inline-block;
+}
+
+.submit-btn {
+    width: 520%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #ffcc00;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.submit-btn:hover {
+    background: #e6b800;
+}
+
+.sign-up-link {
+    text-align: center;
+    margin-top: 10px;
+
+}
+
+.sign-up-link a {
+    color: #ffcc00;
+    text-decoration: none;
+}
+
+.sign-up-link a:hover {
+    text-decoration: underline;
+}
+
+.Input-submit::after,
+.Input-submit::before {
+    content: '';
+    position: absolute;
+    width: 525%;
+    height: 2px;
+    background: linear-gradient(to right, #ff0000, #00ffff);
+    bottom: -5px;
+    left: 0;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s ease-out;
+}
+
+.Input-submit::before {
+    top: -5px;
+    transform-origin: left;
+}
+
+.Input-submit:hover::after,
+.Input-submit:hover::before {
+    transform: scaleX(1);
+}
+
+@keyframes backgroundMove {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 2% 0%; }
+    100% { background-position: 0% 0%; }
+}
+
+@media (max-width: 768px) {
+    body {
+        animation: backgroundMove 5s ease-in-out infinite;
+    }
+}
+
+.input-field:hover {
+    background: #f0f0f0;
+    border: 2px solid #ffcc00;
+    transition: background 0.3s, border 0.3s;
+}
+
+.notification {
+    background-color: #ffcc00;
+    color: #333;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.manage-account table {
+    width: 100%; 
+    border-collapse: collapse;
+}
+
+.manage-account th, td {
+    padding: 8px; 
+    border: 1px solid #ddd; 
+    text-align: left;
+}
+
+.action-links a {
+    margin-right: 10px;
+}
+
+@media (min-width: 768px) {
+    .profile-content {
+        flex-direction: row;  /* Foto dan info side-by-side */
+    }
+    .profile-container {
+        width: 800px;
+        padding: 20px;
+    }
+    .profile-photo {
+        width: 150px;
+        height: 150px;
+    }
+    .profile-photo-section {
+        flex: 1;  /* Mengambil 1 bagian dari ruang flex */
+        padding: 20px;
+    }
+}
+
+.btn-update, .profile-info input {
+    min-height: 44px; /* Ukuran minimum untuk touch */
+}
+
+.profile-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    margin-top: 450px;
+}
+        
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+        
+.profile-header h1 {
+    color: #ffcc00;
+    margin-bottom: 10px;
+}
+        
+.profile-content {
+    display: flex;
+    flex-direction: column;
+}
+        
+.profile-photo-section {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+}
+        
+.profile-info-section {
+    flex: 2;
+    padding: 20px;
+}
+        
+.profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ffcc00;
+    margin-bottom: 20px;
+}
+        
+.profile-info {
+    margin-bottom: 20px;
+}
+        
+.profile-info label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffcc00;
+    font-weight: bold;
+}
+        
+.profile-info input, .profile-info textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background: #222;
+    color: #fff;
+}
+        
+.profile-info input:focus, .profile-info textarea:focus {
+    border-color: #ffcc00;
+    outline: none;
+}
+        
+.btn-update {
+    background: #ffcc00;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+        
+.btn-update:hover {
+    background: #e6b800;
+}
+        
+.notification {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+        
+.success {
+    background-color: #4CAF50;
+    color: white;
+}
+        
+.error {
+    background-color: #f44336;
+    color: white;
+}
+        
+.password-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+}
+        
+.photo-upload {
+    margin-top: 10px;
+}
+
+.input-new-password {
+    width: 70%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background: #fff;
+    color: #222;
+}
+
+.admin {
+    background: #111;
+    color: white;
+}

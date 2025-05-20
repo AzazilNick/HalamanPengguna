@@ -34,7 +34,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="StyleDashboard.css"> <!-- Menghubungkan file CSS -->
+    <link rel="stylesheet" href="style_dashboard.css"> <!-- Menghubungkan file CSS -->
 </head>
 <body>
     <div class="welcome-message">

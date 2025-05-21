@@ -9,8 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     
     $host = 'localhost';
-    $dbuser = 'root'; // Sesuaikan dengan username database
-    $dbpass = '';     // Sesuaikan dengan password database
+    $dbuser = 'root';
+    $dbpass = '';
     $dbname = 'niflix';
 
     try {

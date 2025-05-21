@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['user'] = [
                     'id' => $user['id'],
                     'username' => $user['username'],
-                    'is_admin' => $user['is_admin'] // AMBIL DATA is_admin DARI DATABASE
+                    'is_admin' => $user['is_admin']
                 ];
                 header('Location: dashboard.php');
                 exit();

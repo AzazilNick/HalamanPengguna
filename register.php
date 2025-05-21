@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $message = 'Password dan konfirmasi password tidak cocok!';
     } else {
         $host = 'localhost';
-        $dbuser = 'root'; // Ganti dengan username DB Anda
-        $dbpass = '';     // Ganti dengan password DB Anda
+        $dbuser = 'root';
+        $dbpass = ''; 
         $dbname = 'niflix';
 
         try {

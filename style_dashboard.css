@@ -1,258 +1,246 @@
-/* Reset */
 body {
-    margin: 0; /* Menghapus margin default dari body */
-    font-family: Arial, sans-serif; /* Mengatur font default */
-    background: #111; /* Mengatur latar belakang menjadi warna gelap */
-    color: white; /* Mengatur warna teks menjadi putih */
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
 }
 
-/* Header */
 header {
-    position: fixed; /* Memastikan header tetap di atas saat menggulir */
-    top: 0; /* Menempatkan header di bagian atas */
-    left: 0; /* Menempatkan header di sisi kiri */
-    width: 100%; /* Memastikan header mengambil lebar penuh */
-    background-color: #111; /* Mengatur warna latar belakang header */
-    z-index: 1000; /* Memastikan header berada di atas elemen lain */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #111;
+    z-index: 1000;
 }
 
 .nav-menu {
-    display: none; /* Menyembunyikan menu navigasi secara default */
-    position: absolute; /* Menempatkan menu secara absolut di bawah tombol */
-    top: 100%; /* Menempatkan menu tepat di bawah tombol */
-    left: 0; /* Menempatkan menu di sisi kiri */
-    width: 100%; /* Memastikan menu mengambil lebar penuh */
-    background-color: #111; /* Mengatur warna latar belakang menu */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Menambahkan bayangan pada menu */
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #111;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .nav-menu.active {
-    display: block; /* Menampilkan menu saat aktif */
+    display: block;
 }
 
 main {
-    padding-top: 60px; /* Memberikan ruang di atas konten agar tidak tertutup oleh navbar */
+    padding-top: 60px;
 }
 
 .menu-toggle {
-    font-size: 24px; /* Mengatur ukuran font untuk tombol toggle menu */
-    background: none; /* Menghapus latar belakang tombol */
-    border: none; /* Menghapus border tombol */
-    color: white; /* Mengatur warna teks tombol menjadi putih */
-    cursor: pointer; /* Mengubah kursor menjadi pointer saat hover */
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
 }
 
 .navbar {
-    position: fixed; /* Memastikan navbar tetap di atas saat menggulir */
-    top: 0; /* Menempatkan navbar di bagian atas */
-    left: 0; /* Menempatkan navbar di sisi kiri */
-    width: 100%; /* Memastikan navbar mengambil lebar penuh */
-    background-color: #111; /* Mengatur warna latar belakang navbar */
-    z-index: 1000; /* Memastikan navbar berada di atas elemen lain */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #111;
+    z-index: 1000;
 }
 
 .content {
-    margin-top: 60px; /* Memberikan ruang di atas konten agar tidak tertutup oleh navbar */
+    margin-top: 60px;
 }
 
 .nav-menu ul {
-    list-style: none; /* Menghapus bullet point dari daftar */
-    padding: 0; /* Menghapus padding dari daftar */
-    margin: 0; /* Menghapus margin dari daftar */
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .nav-menu ul li {
-    text-align: center; /* Mengatur teks di dalam item daftar agar berada di tengah */
-    padding: 10px; /* Memberikan padding di dalam item daftar */
-    border-bottom: 1px solid #444; /* Menambahkan garis bawah pada item daftar */
+    text-align: center;
+    padding: 10px;
+    border-bottom: 1px solid #444;
 }
 
 .nav-menu ul li a {
-    text-decoration: none; /* Menghapus garis bawah dari tautan */
-    color: #ffcc00; /* Mengatur warna teks tautan menjadi putih */
-    font-weight: bold; /* Mengatur teks tautan menjadi tebal */
-
+    text-decoration: none;
+    color: #ffcc00;
+    font-weight: bold;
 }
 
-/* Grid Layout untuk Film & Series */
 .grid-container {
-    display: grid; /* Menggunakan grid layout untuk kontainer */
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Mengatur kolom grid dengan ukuran minimum 150px */
-    gap: 15px; /* Memberikan jarak antar item grid */
-    padding: 20px; /* Memberikan padding di dalam kontainer grid */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    padding: 20px;
 }
 
 .grid-item {
-    background: #222; /* Mengatur latar belakang item grid */
-    padding: 10px; /* Memberikan padding di dalam item grid */
-    text-align: center; /* Mengatur teks di dalam item grid agar berada di tengah */
-    border-radius: 8px; /* Memberikan sudut melengkung pada item grid */
+    background: #222;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
 }
 
 .grid-item img {
-    width: 100%; /* Mengatur lebar gambar agar sesuai dengan lebar item grid */
-    border-radius: 8px; /* Memberikan sudut melengkung pada gambar */
+    width: 100%;
+    border-radius: 8px;
 }
 
 .grid-item:hover {
-    transform: scale(1.05); /* Efek zoom saat hover pada grid item */
+    transform: scale(1.05);
 }
 
 .grid-item h4 {
-    margin: 10px 0; /* Memberikan margin atas dan bawah pada judul */
-    font-size: 14px; /* Mengatur ukuran font untuk judul */
-    color: #ffcc00; /* Mengatur warna teks judul */
+    margin: 10px 0;
+    font-size: 14px;
+    color: #ffcc00;
 }
 
 .btn {
-    display: inline-block; /* Mengatur tombol agar ditampilkan sebagai blok inline */
-    padding: 6px 10px; /* Memberikan padding di dalam tombol */
-    background: #ffcc00; /* Mengatur warna latar belakang tombol */
-    color: black; /* Mengatur warna teks tombol menjadi hitam */
-    text-decoration: none; /* Menghapus garis bawah dari tautan tombol */
-    border-radius: 5px; /* Memberikan sudut melengkung pada tombol */
-    font-weight: bold; /* Mengatur teks tombol menjadi tebal */
+    display: inline-block;
+    padding: 6px 10px;
+    background: #ffcc00;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
-/* Footer */
 footer {
-    text-align: center; /* Mengatur teks di dalam footer agar berada di tengah */
-    padding: 10px; /* Memberikan padding di dalam footer */
-    background: #222; /* Mengatur warna latar belakang footer */
+    text-align: center;
+    padding: 10px;
+    background: #222;
 }
 
-/* SLIDER */
-.slider-wrapper { 
-    position: relative; /* Mengatur posisi relatif untuk elemen slider */
-    width: 80%; /* Menggunakan 80% dari lebar kontainer */
-    overflow: hidden; /* Menyembunyikan scrollbar */
-    margin: 20px auto; /* Memusatkan slider di dalam kontainer */
+.slider-wrapper {
+    position: relative;
+    width: 80%;
+    overflow: hidden;
+    margin: 20px auto;
 }
 
 .slider-container {
-    display: flex; /* Menggunakan flexbox untuk menampilkan elemen dalam slider dalam baris */
-    overflow-x: auto; /* Mengizinkan scroll horizontal */
-    scroll-snap-type: x mandatory; /* Mengatur efek snap saat menggulir */
-    scroll-behavior: smooth; /* Mengatur efek smooth saat menggulir */
-    -webkit-overflow-scrolling: touch; /* Supaya smooth di iOS */
-    width: 100%; /* Memastikan lebar kontainer 100% */
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
     gap: 0px;
 }
 
 .slider-container::-webkit-scrollbar {
-    display: none; /* Sembunyikan scrollbar di Webkit (Chrome, Safari) */
+    display: none;
 }
 
 .slider-item {
-    flex: 0 0 100%; /* Memastikan item tidak menyusut dan tetap dalam ukuran aslinya */
-    text-align: center; /* Mengatur teks di dalam item slider agar berada di tengah */
-    display: flex; /* Menggunakan flex untuk menampilkan gambar bersebelahan */
-    flex-direction: column; /* Mengatur arah flex menjadi kolom */
-    align-items: center; /* Pusatkan gambar secara vertikal */
-    padding: 10px; /* Memberikan padding di dalam item slider */
+    flex: 0 0 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
 }
 
 .slider-item img {
-    width: 100%; /* Mengatur lebar gambar sesuai dengan viewport */
-    max-width: 250px; /* Mengatur lebar maksimum gambar item slider */
-    border-radius: 8px; /* Memberikan sudut melengkung pada gambar */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Menambahkan bayangan pada gambar */
+    width: 100%;
+    max-width: 250px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .slider-item:hover {
-    transform: scale(1.05); /* Efek zoom saat hover pada item slider */
+    transform: scale(1.05);
 }
 
 .nav-menu ul li a {
     transition: color .5s, transform .5s;
 }
 
-/* Menu Items */
 .nav-menu li {
-    margin: 0 20px; /* Add margin between items */
+    margin: 0 20px;
 }
 
-/* Hover Effect */
 .nav-menu a:hover {
-    color: #ff9100; /* Change color on hover */
+    color: #ff9100;
 }
 
 h1 {
-    margin-left: 0px; /* Memberikan margin kiri pada judul */
-    margin-bottom: 10px; /* Mengatur margin bawah pada judul */
+    margin-left: 0px;
+    margin-bottom: 10px;
     text-align: center;
     color: #ffcc00;
 }
 
 .welcome-message {
-    text-align: start; 
+    text-align: start;
     margin-top: 60px;
-    margin-bottom: -80px; 
+    margin-bottom: -80px;
     margin-right: 30px;
     margin-left: 30px;
-    color: #ff9100; 
-    font-size: 24px; 
-    font-weight: bold; 
-    background-color: #111; 
+    color: #ff9100;
+    font-size: 24px;
+    font-weight: bold;
+    background-color: #111;
     padding: 1px;
-    border-radius: 5px; 
-}   
+    border-radius: 5px;
+}
 
-/* Media Query untuk Desktop */
 @media (min-width: 768px) {
-
-    /* Header */
     header {
-        position: fixed; /* Memastikan header tetap di atas saat menggulir */
-        top: 0; /* Menempatkan header di bagian atas */
-        left: 0; /* Menempatkan header di sisi kiri */
-        width: 100%; /* Memastikan header mengambil lebar penuh */
-        background-color: rgba(0, 0, 0, 0.9); /* Menghapus latar belakang menu */
-        z-index: 1000; /* Memastikan header berada di atas elemen lain */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
     }
 
     .nav-menu {
-        display: flex; /* Menampilkan menu navigasi dalam format flex */
-        flex-direction: row; /* Mengatur arah flex menjadi baris */
-        position: static; /* Mengatur posisi menu menjadi statis */
-        background: none; /* Menghapus latar belakang menu */
-        justify-content: right; /* Mengatur konten menu ke sebelah kanan */
+        display: flex;
+        flex-direction: row;
+        position: static;
+        background: none;
+        justify-content: right;
     }
 
     h1 {
-        margin-left: 0px; /* Memberikan margin kiri pada judul */
-        margin-bottom: 10px; /* Mengatur margin bawah pada judul */
+        margin-left: 0px;
+        margin-bottom: 10px;
         font-size: 45px;
     }
 
     .nav-menu ul {
-        display: flex; /* Menampilkan daftar menu dalam format flex */
-        flex-direction: row; /* Mengatur arah flex menjadi baris */
-        margin-top: 15px; /* Memberikan margin atas pada daftar menu */
-        margin-bottom: 15px; /* Memberikan margin bawah pada daftar menu */
+        display: flex;
+        flex-direction: row;
+        margin-top: 15px;
+        margin-bottom: 15px;
     }
 
     .nav-menu ul li {
-        padding: 17px 25px; /* Memberikan padding horizontal pada item daftar */
-        border-bottom: none; /* Menghapus garis bawah pada item daftar */
-        font-size: 16px; /* Mengatur ukuran font untuk item daftar */
+        padding: 17px 25px;
+        border-bottom: none;
+        font-size: 16px;
         margin-top: -5px;
         margin-bottom: -5px;
     }
 
     .menu-toggle {
-        display: none; /* Menyembunyikan tombol toggle menu pada desktop */
+        display: none;
     }
 
     .slider-item {
-        flex: 0 0 calc(33.33% - 10px); /* Menampilkan 3 film sekaligus */
-        margin: 30px; /* Memberikan margin pada item slider */
+        flex: 0 0 calc(33.33% - 10px);
+        margin: 30px;
         margin-top: -10px;
         margin-bottom: 10px;
     }
 
     .slider-item img {
-        max-width: 450px; /* Mengatur lebar maksimum gambar item slider */
+        max-width: 450px;
     }
-
 }

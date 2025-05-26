@@ -2,7 +2,7 @@
 // niflix_project/app/Views/profile.php
 // $currentUser, $message, $message_type, $error, $title akan tersedia dari ProfileController
 
-require_once APP_ROOT . '/app/Views/includes/header.php';
+require_once APP_ROOT . '/app/Views/includes/header_profile.php'; // UBAH BARIS INI
 
 // Pastikan base Path tersedia untuk gambar dan tautan
 $basePath = dirname($_SERVER['SCRIPT_NAME']);
@@ -38,7 +38,7 @@ if (strpos($profilePhotoUrl, 'default.png') !== false && !file_exists(PUBLIC_PAT
         <form class="profile-content" method="POST" enctype="multipart/form-data">
             <div class="profile-photo-section">
                 <img src="<?= $profilePhotoUrl ?>"
-                     alt="Profile Photo" class="profile-photo">
+                    alt="Profile Photo" class="profile-photo">
 
                 <div class="photo-upload">
                     <label for="profile_photo" style="color: #ffcc00; display: block; margin-bottom: 10px;">

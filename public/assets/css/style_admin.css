@@ -1,0 +1,142 @@
+/* niflix_project/public/assets/css/style_admin.css */
+
+/* Container untuk halaman admin */
+.admin-container { /* Ganti .admin menjadi .admin-container untuk lebih spesifik */
+    padding: 20px;
+    background: #111; /* Latar belakang gelap konsisten */
+    color: white;
+    min-height: calc(100vh - 120px); /* Sesuaikan tinggi agar footer tidak menimpa */
+    margin-top: 60px; /* Jaga jarak dari header fixed */
+}
+
+h1 {
+    color: #ffcc00;
+    text-align: center;
+    margin: 20px 0 30px 0; /* Tambah margin bawah */
+    font-size: 2em;
+}
+
+table {
+    width: 95%; /* Sedikit lebih kecil dari 100% untuk margin */
+    border-collapse: collapse;
+    margin: 0 auto 30px auto; /* Pusatkan tabel, beri margin bawah */
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 8px; /* Sudut membulat */
+    overflow: hidden; /* Penting untuk border-radius pada tabel */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Sedikit bayangan */
+}
+
+th, td {
+    padding: 12px 15px; /* Tambah padding */
+    border: none; /* Hilangkan border antar sel bawaan */
+    text-align: left;
+}
+
+th {
+    background: #222;
+    color: #ffcc00;
+    font-weight: bold;
+    text-transform: uppercase; /* Huruf kapital semua untuk header */
+    letter-spacing: 0.05em;
+}
+
+td {
+    background: #333;
+    color: white;
+}
+
+/* Garis pemisah antar baris */
+table tr {
+    border-bottom: 1px solid #444; /* Garis pemisah abu-abu tua */
+}
+
+table tbody tr:last-of-type {
+    border-bottom: none; /* Hilangkan garis di baris terakhir */
+}
+
+/* Efek striped rows (baris genap lebih terang) */
+table tbody tr:nth-of-type(even) {
+    background-color: #2a2a2a; /* Warna sedikit lebih terang */
+}
+
+/* Efek hover pada baris */
+table tbody tr:hover {
+    background-color: #3d3d3d; /* Lebih terang saat dihover */
+    transition: background-color 0.3s ease;
+}
+
+.action-links a {
+    color: #ffcc00;
+    text-decoration: none;
+    margin-right: 15px; /* Spasi antar link */
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.action-links a:hover {
+    color: #ff9100;
+    text-decoration: underline;
+}
+
+/* Tombol kembali (jika ada) */
+.btn {
+    display: inline-block;
+    padding: 8px 15px;
+    background: #ffcc00;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background: #e6b800;
+}
+
+/* Notifikasi (success/error) */
+.notification {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}
+
+.notification.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.notification.error {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Untuk membuat tabel responsif di layar kecil */
+@media screen and (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto; /* Aktifkan scroll horizontal jika tabel melebihi lebar layar */
+        white-space: nowrap; /* Jangan wrap isi sel */
+        -webkit-overflow-scrolling: touch; /* Untuk smooth scrolling di iOS */
+    }
+
+    .admin-container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .action-links a {
+        margin-right: 10px;
+        font-size: 0.9em;
+    }
+}

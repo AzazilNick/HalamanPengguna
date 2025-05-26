@@ -30,6 +30,7 @@ if ($basePath === '/') {
                 <li><a href="<?= $basePath ?>/review_film">Review Film</a></li>
                 <li><a href="<?= $basePath ?>/review_series">Review Series</a></li>
                 <li><a href="<?= $basePath ?>/daftar_film">Daftar Film</a></li>
+                <!-- <li><a href="<?= $basePath ?>/daftar_series">Daftar Series</a></li> -->
                 <li><a href="<?= $basePath ?>/daftar_series">Daftar Series</a></li>
                 <li><a href="<?= $basePath ?>/komentar_rating">Komentar & Rating</a></li>
                 <li><a href="<?= $basePath ?>/profile">Profile</a></li>
@@ -37,4 +38,3 @@ if ($basePath === '/') {
             </ul>
         </nav>
     </header>
-    ```

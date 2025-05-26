@@ -13,9 +13,8 @@ body {
     color: #fff;
 
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Gunakan min-height agar bisa discroll jika konten banyak */
+    flex-direction: column; /* Mengubah ini menjadi kolom agar header/main/footer bisa ditumpuk */
+    min-height: 100vh;
     margin: 0;
     animation: backgroundMove 10s ease-in-out infinite;
 }
@@ -25,6 +24,79 @@ body {
     0% { background-position: 0% 0%; }
     50% { background-position: 2% 0%; }
     100% { background-position: 0% 0%; }
+}
+
+/* Header (tambahan untuk memastikan header tetap di atas saat scroll) */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #111;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    height: 60px; /* Sesuaikan dengan tinggi header yang kamu inginkan */
+}
+
+/* Navigasi (jika diperlukan untuk header_profile) */
+.nav-menu {
+    display: flex;
+    flex-direction: row; /* Untuk desktop, tampilkan horizontal */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+    justify-content: flex-end; /* Pindahkan menu ke kanan */
+    align-items: center;
+}
+
+.nav-menu ul {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-menu ul li {
+    padding: 0 15px;
+}
+
+.nav-menu ul li a {
+    text-decoration: none;
+    color: #ffcc00;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-menu ul li a:hover {
+    color: #ff9100;
+}
+
+.menu-toggle { /* Untuk mobile, sembunyikan toggle di desktop */
+    display: none;
+    font-size: 30px;
+    background: none;
+    border: none;
+    color: #ffcc00;
+    cursor: pointer;
+    padding: 0;
+}
+
+
+/* Main content (penting agar tidak tertutup header) */
+main {
+    flex-grow: 1; /* Memastikan main content mengisi ruang yang tersisa */
+    padding-top: 60px; /* Sesuaikan dengan tinggi header */
+    display: flex; /* Tambahkan flex untuk centering container profil */
+    justify-content: center; /* Pusatkan secara horizontal */
+    align-items: flex-start; /* Sejajarkan di bagian atas */
+    min-height: calc(100vh - 120px); /* Sesuaikan tinggi agar footer tidak menimpa */
+    box-sizing: border-box;
 }
 
 /* Container untuk Login/Register box */
@@ -225,14 +297,14 @@ body {
 /* Styling untuk Halaman Profil */
 .profile-container {
     max-width: 800px;
-    margin: auto; /* Pusatkan container */
-    padding: 30px; /* Tambah padding */
+    margin: 20px auto; /* Sesuaikan margin agar tidak terlalu dekat dengan header, dan pusatkan */
+    padding: 30px;
     background: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    margin-top: 80px; /* Jaga jarak dari header fixed */
-    margin-bottom: 30px; /* Ruang di bawah */
     box-sizing: border-box;
+    /* margin-top: 80px; */ /* Dihapus karena padding-top di main sudah menangani ini */
+    /* margin-bottom: 30px; */ /* Dihapus agar lebih konsisten dengan margin auto di atas */
 }
 
 .profile-header {
@@ -250,7 +322,7 @@ body {
     display: flex;
     flex-direction: column; /* Default stack vertikal di mobile */
     gap: 20px; /* Jarak antar section */
-    align-items: center;
+    align-items: center; /* Pusatkan item di tengah secara horizontal */
 }
 
 .profile-photo-section {
@@ -262,9 +334,10 @@ body {
 .profile-info-section {
     flex: 2;
     padding: 10px;
+    width: 100%; /* Penting agar mengambil lebar penuh di mobile */
     display: flex;
     flex-direction: column;
-    align-items: center; /* Pusatkan item secara horizontal */
+    align-items: center; /* Pusatkan item secara horizontal di mobile */
 }
 
 .profile-photo {
@@ -281,7 +354,7 @@ body {
     margin-bottom: 20px;
     width: 100%; /* Pastikan mengambil lebar penuh agar centering input berfungsi */
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Label dan input ditumpuk vertikal */
     align-items: center; /* Pusatkan label dan input di sini */
 }
 
@@ -291,7 +364,6 @@ body {
     color: #ffcc00;
     font-weight: bold;
     font-size: 1.1em;
-    text-align: center; /* Pusatkan teks label */
     width: 100%; /* Pastikan label mengambil lebar penuh */
 }
 
@@ -301,7 +373,7 @@ body {
     width: 100%; /* Lebar 100% dari parent (profile-info atau password-section) */
     max-width: 350px; /* Batasi lebar maksimum input untuk estetika di desktop */
     padding: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 15px; /* Ruang di bawah setiap input */
     border: 1px solid #444;
     border-radius: 5px;
     background: #222;
@@ -330,9 +402,7 @@ body {
     transition: background 0.3s ease;
     display: block; /* Buat tombol memenuhi lebar */
     width: 100%;
-    margin-top: 20px;
     margin: 20px auto 0 auto; /* Pusatkan tombol update */
-    display: block; /* Penting agar margin auto berfungsi */
     max-width: 350px; /* Sesuaikan lebar tombol dengan input */
 }
 
@@ -378,42 +448,51 @@ body {
         flex-direction: row; /* Foto dan info side-by-side di desktop */
         align-items: flex-start; /* Sejajarkan di bagian atas */
         gap: 40px;
-        justify-content: center;
-
+        justify-content: center; /* Pusatkan keseluruhan flex container */
     }
     .profile-photo-section {
-        flex: 0 0 200px;
-        padding-right: 0; /* Tambah ruang di kanan foto */
+        flex: 0 0 200px; /* Lebar tetap untuk foto */
+        padding-right: 0;
         text-align: center;
     }
     .profile-info-section {
         flex: 1; /* Biarkan bagian info mengisi sisa ruang */
-        padding-left: 0; /* Hapus padding-left yang mungkin ada */
-        align-items: flex-start;
+        padding-left: 0;
+        align-items: flex-start; /* Sejajarkan label dan input ke kiri */
     }
 
     .profile-info,
     .password-section {
         align-items: flex-start; /* Label dan input sejajar kiri di desktop */
+        width: 100%; /* Penting agar input mengambil lebar yang ditentukan */
+    }
+
+    .profile-info .input-group { /* Menambahkan ini untuk memperbaiki tata letak input di desktop */
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 15px; /* Sesuaikan jarak antar input */
     }
 
     .profile-info label,
     .password-section label {
-        width: 150px;
-        display: inline-block;
-        margin-bottom: 0;
+        width: 150px; /* Beri label lebar tetap */
+        display: inline-block; /* Agar bisa sejajar dengan input */
+        margin-bottom: 0; /* Hapus margin bawah default */
         vertical-align: middle;
-        text-align: right; /* Rata kanan label agar dekat dengan input */
-        padding-right: 10px; /* Sedikit padding untuk pemisah */
+        padding-right: 15px; /* Sedikit padding untuk pemisah */
+        box-sizing: border-box; /* Pastikan padding tidak menambah lebar */
     }
 
     .profile-info input,
+    .profile-info textarea, /* Tambahkan textarea di sini juga */
     .input-new-password {
-        width: calc(100% - 160px); /* Sesuaikan lebar input */
+        width: calc(100% - 165px); /* Sesuaikan lebar input (total lebar - lebar label - padding label) */
         display: inline-block;
         vertical-align: middle;
-        margin-bottom: 15px;
+        margin-bottom: 0; /* Hapus margin bawah di desktop */
         text-align: left; /* Teks input rata kiri di desktop */
+        max-width: none; /* Hapus batasan max-width di desktop */
     }
 
     .photo-upload label {
@@ -429,16 +508,16 @@ body {
     .password-section h3 {
         text-align: left; /* Rata kiri judul Change Password di desktop */
         width: 100%;
-
     }
 
     .btn-update {
         margin: 20px 0 0 0; /* Reset margin auto di desktop, rata kiri */
         max-width: none; /* Hilangkan batasan lebar */
+        align-self: flex-start; /* Sejajarkan tombol ke kiri */
     }
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 1024px) {
     .profile-container {
         padding: 40px; /* Tambah padding keseluruhan container */
     }
@@ -450,8 +529,13 @@ body {
         width: 180px; /* Beri label lebih banyak ruang */
     }
     .profile-info input,
+    .profile-info textarea,
     .input-new-password {
-        width: calc(100% - 190px); /* Sesuaikan lebar input */
+        width: calc(100% - 195px); /* Sesuaikan lebar input (total lebar - lebar label - padding label) */
+    }
+    .btn-update {
+        max-width: 300px; /* Batasi lebar tombol di desktop besar */
+        margin: 20px auto 0 0; /* Pusatkan tombol atau biarkan rata kiri */
     }
 }
 

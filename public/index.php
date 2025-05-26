@@ -75,6 +75,11 @@ if (!empty($uriSegments[0])) {
                 $controllerFilePath = APP_ROOT . '/app/Controllers/CommentController.php';
                 array_shift($uriSegments); // Hapus segmen 'comment'
                 break;
+            case 'daftar_series': // NEW ROUTE FOR SERIES
+                $controllerName = 'SeriesController';
+                $controllerFilePath = APP_ROOT . '/app/Controllers/SeriesController.php';
+                array_shift($uriSegments);
+                break;
             default:
                 // Jika segmen pertama ada tapi bukan controller yang valid, biarkan controllerName default
                 // dan anggap segmen pertama sebagai bagian dari path (misal: /login atau /dashboard)

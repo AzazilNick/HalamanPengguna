@@ -214,10 +214,6 @@ h1 {
     header {
         padding: 0 20px;
         /* remove justify-content: space-between; from here if present */
-        /* Tambahkan align-items: stretch; agar item header memiliki tinggi yang sama jika diperlukan */
-        align-items: stretch;
-        /* Tambahkan justify-content: center; untuk memusatkan konten header di desktop */
-        justify-content: center; /* Memusatkan menu toggle dan nav-menu */
     }
 
     .menu-toggle {
@@ -234,7 +230,7 @@ h1 {
         max-height: none;
         overflow-y: visible;
         flex-grow: 1; /* Biarkan menu mengisi sisa ruang */
-        /* Hapus justify-content: flex-end; jika ada */
+        justify-content: flex-end; /* Dorong menu ke kanan */
         align-items: center;
     }
 
@@ -243,17 +239,14 @@ h1 {
         flex-direction: row;
         align-items: center;
         margin: 0;
-        flex-wrap: wrap; /* Izinkan item menu untuk melipat ke baris baru */
-        justify-content: center; /* Rata tengah menu di desktop */
+        flex-wrap: nowrap; /* Pastikan tidak wrap di tablet/laptop */
+        justify-content: flex-end;
         width: 100%; /* Pastikan ul memenuhi lebar nav-menu */
-        overflow-x: auto; /* Aktifkan scroll horizontal jika wrap tidak cukup */
-        -webkit-overflow-scrolling: touch;
     }
 
     .nav-menu ul li {
         padding: 0 8px; /* Kurangi padding horizontal lebih banyak untuk tablet */
         border-bottom: none;
-        flex-shrink: 0; /* Pastikan item tidak mengecil terlalu banyak */
     }
 
     .nav-menu ul li a {
@@ -301,7 +294,8 @@ h1 {
 /* Styling untuk halaman artikel dan komentar */
 .articles-container,
 .article-detail-container,
-.form-container {
+.form-container,
+.series-container {
     max-width: 900px;
     margin: 20px auto;
     padding: 30px;
@@ -313,7 +307,8 @@ h1 {
 
 .articles-container h1,
 .article-detail-container h1,
-.form-container h1 {
+.form-container h1,
+.series-container h1 {
     color: #ffcc00;
     text-align: center;
     margin-bottom: 30px;
@@ -381,7 +376,8 @@ h1 {
 }
 
 /* List Artikel */
-.article-list .article-item {
+.article-list .article-item,
+.series-list .series-item {
     background: #222;
     padding: 20px;
     margin-bottom: 20px;
@@ -390,8 +386,23 @@ h1 {
     transition: transform 0.3s ease;
 }
 
-.article-list .article-item:hover {
+.article-list .article-item:hover,
+.series-list .series-item:hover {
     transform: translateY(-5px);
+}
+
+.series-thumbnail {
+    width: 100%;
+    max-width: 250px; /* Adjust as needed */
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.series-meta {
+    font-size: 0.9em;
+    color: #bbb;
+    margin-bottom: 15px;
 }
 
 .article-list .article-item h2 {

@@ -7,13 +7,14 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    background: #111; /* Default background for all pages */
+    font-family: 'Arial', sans-serif; /* Default background for all pages */
+    background: url('https://www.notebookcheck.net/fileadmin/Notebooks/News/_nc3/netflixteaser.png') no-repeat center center fixed;
     color: #fff;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
+    animation: backgroundMove 10s ease-in-out infinite;
 }
 
 /* Header */

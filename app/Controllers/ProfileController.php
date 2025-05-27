@@ -16,7 +16,14 @@ class ProfileController {
 
         // Pastikan pengguna sudah login untuk mengakses halaman profil
         if (!Session::has('user')) {
-            redirect('/auth/login');
+            // Untuk request non-AJAX, redirect. Untuk AJAX, kirim respons JSON error.
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Anda harus login untuk memperbarui profil.', 'redirect' => '/auth/login']);
+                exit();
+            } else {
+                redirect('/auth/login');
+            }
         }
 
         // Pastikan direktori upload ada
@@ -34,7 +41,10 @@ class ProfileController {
 
         $message = null;
         $messageType = null;
-        $error = null;
+        $error = null; // Digunakan untuk validasi sisi server (AJAX)
+
+        // Deteksi apakah ini permintaan AJAX
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = trim($_POST['username'] ?? '');
@@ -45,6 +55,8 @@ class ProfileController {
             $confirmPassword = $_POST['confirm_password'] ?? '';
 
             $updateData = [];
+            $passwordUpdated = false; // Flag untuk respons AJAX
+            $newPhotoUrl = null; // URL foto baru untuk respons AJAX
 
             // Validasi username
             if (empty($username)) {
@@ -77,6 +89,7 @@ class ProfileController {
                     $error = "Password baru tidak cocok.";
                 } else {
                     $updateData['password'] = password_hash($newPassword, PASSWORD_DEFAULT);
+                    $passwordUpdated = true;
                 }
             }
 
@@ -102,6 +115,14 @@ class ProfileController {
                             unlink($this->uploadDir . $photoPath);
                         }
                         $updateData['foto_pengguna'] = $newFileName; // Simpan hanya nama file
+                        // Dapatkan base path untuk URL foto baru
+                        $basePath = dirname($_SERVER['SCRIPT_NAME']);
+                        if ($basePath === '/') {
+                            $basePath = '';
+                        } else {
+                            $basePath = rtrim($basePath, '/');
+                        }
+                        $newPhotoUrl = $basePath . '/uploads/profile_photos/' . $newFileName;
                     } else {
                         $error = "Maaf, ada kesalahan saat mengunggah file Anda.";
                     }
@@ -110,7 +131,7 @@ class ProfileController {
                 }
             }
 
-            // Jika tidak ada error, lakukan update
+            // Jika tidak ada error dari validasi input atau upload
             if (empty($error)) {
                 if ($this->userModel->update($userId, $updateData)) {
                     $message = "Profil berhasil diperbarui!";
@@ -129,7 +150,20 @@ class ProfileController {
                     $error = "Terjadi kesalahan saat memperbarui profil: " . ($this->pdo->errorInfo()[2] ?? 'Unknown error'); // Ambil error PDO jika ada
                 }
             }
+
+            // Kirim respons JSON jika ini adalah request AJAX
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => empty($error),
+                    'message' => $error ?: $message,
+                    'new_photo_url' => $newPhotoUrl,
+                    'password_updated' => $passwordUpdated
+                ]);
+                exit(); // Hentikan eksekusi setelah mengirim respons JSON
+            }
         }
+        // Untuk request non-AJAX (GET request awal), tampilkan view seperti biasa
         view('profile', [
             'currentUser' => $currentUser,
             'message' => $message,

@@ -23,6 +23,9 @@ if (strpos($profilePhotoUrl, 'default.png') !== false && !file_exists(PUBLIC_PAT
 
 <main>
     <div class="profile-container">
+        <div class="profile-header">
+            <h1>My Profile</h1>
+        </div>
         <form class="profile-content" method="POST" enctype="multipart/form-data">
             <div class="profile-photo-section">
                 <img src="<?= $profilePhotoUrl ?>"

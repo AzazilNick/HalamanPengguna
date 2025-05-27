@@ -462,6 +462,14 @@ main {
     display: block; /* Agar margin auto berfungsi */
 }
 
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #222;
+    color: white;
+}
+
 /* Media queries untuk responsivitas */
 @media (min-width: 768px) {
     .profile-content {

@@ -5,7 +5,7 @@
 // Memuat header
 require_once APP_ROOT . '/app/Views/includes/header.php';
 ?>
-
+<div class="container-dashboard">
 <main>
     <div class="welcome-message">
         <h2>Welcome, <?= escape_html($user_username) ?>!</h2>
@@ -46,6 +46,7 @@ require_once APP_ROOT . '/app/Views/includes/header.php';
             <?php endforeach; ?>
         </div>
     </section>
+</div>
 
 <?php
 // Memuat footer (tag main akan ditutup di sini)

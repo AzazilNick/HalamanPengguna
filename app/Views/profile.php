@@ -26,6 +26,15 @@ if (strpos($profilePhotoUrl, 'default.png') !== false && !file_exists(PUBLIC_PAT
         <div class="profile-header">
             <h1>My Profile</h1>
         </div>
+        <div id="profile-notification">
+            <?php if (isset($message) && $message): ?>
+                <div class="notification <?= escape_html($message_type) ?>"><?= escape_html($message) ?></div>
+            <?php endif; ?>
+            <?php if (isset($error) && $error): // Error dari validasi PHP awal (sebelum AJAX) ?>
+                <div class="notification error"><?= escape_html($error) ?></div>
+            <?php endif; ?>
+        </div>
+
         <form class="profile-content" method="POST" enctype="multipart/form-data">
             <div class="profile-photo-section">
                 <img src="<?= $profilePhotoUrl ?>"

@@ -309,6 +309,9 @@ main {
     .submit-btn {
         font-size: 16px;
     }
+    .profile-container {
+        margin-top: 100px;
+    }
 }
 
 /* Styling untuk Halaman Profil */

@@ -1,0 +1,45 @@
+/* niflix_project/public/assets/css/dashboard_override.css */
+
+.welcome-message {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+    color: var(--niflix-secondary);
+    font-size: 24px;
+    font-weight: bold;
+    background-color: var(--niflix-dark);
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Card image and title styling */
+.card-img-top {
+    border-radius: 8px; /* Consistent with original design */
+}
+
+.card-title {
+    color: var(--niflix-primary);
+}
+
+/* Carousel specific styling */
+.carousel-item img {
+    height: 300px; /* Example height, adjust as needed */
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .welcome-message {
+        text-align: start;
+        margin-top: 80px; /* Adjust for fixed header */
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 900px; /* Align with container width */
+    }
+
+    .carousel-item img {
+        height: 400px; /* Larger height for desktop */
+    }
+}

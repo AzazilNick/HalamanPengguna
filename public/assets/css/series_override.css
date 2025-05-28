@@ -1,0 +1,46 @@
+/* niflix_project/public/assets/css/series_override.css */
+
+/* Series List styles */
+.series-container.card {
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.series-container h1 {
+    color: var(--niflix-primary);
+}
+
+.card-title a {
+    color: var(--niflix-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.card-title a:hover {
+    text-decoration: underline;
+    color: var(--niflix-secondary);
+}
+
+.card-img-top {
+    border-radius: 5px;
+}
+
+.text-muted.small {
+    color: var(--niflix-text-light) !important;
+}
+
+/* Single series detail styles */
+.card.bg-dark.p-4 {
+    background-color: var(--niflix-medium) !important;
+}
+
+.card-text.lead {
+    line-height: 1.8;
+    font-size: 1.1em;
+    color: var(--niflix-text-white);
+    text-align: justify;
+}
+
+.card-text.text-muted.text-center {
+    color: var(--niflix-text-light) !important;
+}

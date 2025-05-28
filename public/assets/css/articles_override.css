@@ -1,0 +1,63 @@
+/* niflix_project/public/assets/css/articles_override.css */
+
+.card.bg-dark .card-title a {
+    color: var(--niflix-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.card.bg-dark .card-title a:hover {
+    color: var(--niflix-secondary);
+    text-decoration: underline;
+}
+
+/* Article meta (author/date) styling */
+.text-muted.small {
+    color: var(--niflix-text-light) !important;
+}
+
+/* Specific article content styling */
+.article-content {
+    line-height: 1.8;
+    font-size: 1.1em;
+    color: var(--niflix-text-white);
+    text-align: justify;
+}
+
+/* Author photo thumbnail */
+.author-photo-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 1px solid var(--niflix-primary);
+}
+
+/* Comments section styling */
+.comments-section .card.bg-secondary {
+    background-color: var(--niflix-light-dark) !important;
+}
+
+.comments-section .card-text.fw-bold {
+    color: var(--niflix-primary) !important;
+}
+
+.commenter-photo-thumb {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 1px solid var(--niflix-primary);
+}
+
+/* Form container specific styles (create/edit articles) */
+.form-container.card {
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.form-label {
+    color: var(--niflix-primary);
+}

@@ -1,0 +1,115 @@
+/* niflix_project/public/assets/css/admin_override.css */
+
+.table.table-dark,
+.table.table-striped,
+.table.table-hover {
+    background: rgba(0, 0, 0, 0.8); /* Slightly transparent dark background */
+    border-radius: 8px;
+    overflow: hidden; /* Important for border-radius on tables */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.table.table-dark th {
+    background: var(--niflix-medium);
+    color: var(--niflix-primary);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table.table-dark td {
+    background: var(--niflix-light-dark);
+    color: white;
+}
+
+.table.table-striped > tbody > tr:nth-of-type(odd) > *,
+.table.table-dark.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: var(--niflix-medium); /* Darker stripe */
+}
+
+.table.table-striped > tbody > tr:nth-of-type(even) > *,
+.table.table-dark.table-striped > tbody > tr:nth-of-type(even) > * {
+    background-color: var(--niflix-light-dark); /* Lighter stripe */
+}
+
+.table.table-hover > tbody > tr:hover > * {
+    background-color: #3d3d3d !important; /* Slightly lighter on hover */
+    transition: background-color 0.3s ease;
+}
+
+.table.align-middle th,
+.table.align-middle td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--niflix-border); /* Custom border */
+}
+
+.table.align-middle tbody tr:last-of-type td {
+    border-bottom: none; /* No border on last row */
+}
+
+/* Action links within table */
+.table td a {
+    color: var(--niflix-primary);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.table td a:hover {
+    color: var(--niflix-secondary);
+    text-decoration: underline;
+}
+
+/* Responsive Table */
+@media screen and (max-width: 768px) {
+    .table-responsive {
+        border-radius: 8px; /* Apply border-radius to responsive wrapper */
+    }
+    table {
+        min-width: 100% !important; /* Ensure table fills its container */
+    }
+    table thead, table tbody, table tr {
+        display: block;
+        width: 100%;
+    }
+    table th, table td {
+        min-width: 120px;
+        box-sizing: border-box;
+    }
+}
+
+/* Admin Edit User Specific Styles */
+.admin-edit-user-container .img-fluid.rounded-circle {
+    border: 3px solid var(--niflix-primary);
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+}
+
+.admin-edit-user-container .form-label {
+    color: var(--niflix-primary);
+    font-weight: bold;
+}
+
+.admin-edit-user-container .form-control,
+.admin-edit-user-container .form-select {
+    background-color: var(--niflix-light-dark);
+    color: var(--niflix-text-white);
+    border: 1px solid var(--niflix-border);
+}
+
+.admin-edit-user-container .form-control:focus,
+.admin-edit-user-container .form-select:focus {
+    border-color: var(--niflix-primary);
+    background-color: var(--niflix-medium);
+    box-shadow: 0 0 0 0.25rem rgba(255, 204, 0, 0.25);
+}
+
+.admin-edit-user-container .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffcc00'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+}
+
+.admin-edit-user-container h3 {
+    color: var(--niflix-primary);
+}

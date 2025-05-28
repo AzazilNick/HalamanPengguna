@@ -1,0 +1,207 @@
+/* niflix_project/public/assets/css/niflix_custom.css */
+
+/* Custom CSS Variables */
+:root {
+    --niflix-primary: #ffcc00;
+    --niflix-secondary: #ff9100;
+    --niflix-dark: #111;
+    --niflix-darker: #000;
+    --niflix-medium: #222;
+    --niflix-light-dark: #333;
+    --niflix-border: #444;
+    --niflix-text-light: #bbb;
+    --niflix-text-white: #eee;
+    --niflix-success: #4CAF50;
+    --niflix-error: #f44336;
+    --niflix-info: #2196F3;
+}
+
+/* Global Body Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background: var(--niflix-dark);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Navbar (Header) Customizations */
+.navbar {
+    background-color: rgba(0, 0, 0, 0.9);
+    height: 60px;
+}
+
+.navbar-brand {
+    color: var(--niflix-primary) !important;
+    font-weight: bold;
+}
+
+.navbar-toggler {
+    color: var(--niflix-primary) !important;
+    border-color: var(--niflix-primary) !important;
+    font-size: 2rem; /* Adjusted for larger icon */
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 204, 0, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+.navbar-nav .nav-link {
+    color: var(--niflix-primary) !important;
+    font-weight: bold;
+    padding: 0.75rem 1rem;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--niflix-secondary) !important;
+    background-color: var(--niflix-medium);
+}
+
+@media (max-width: 767.98px) {
+    .navbar-nav {
+        background-color: var(--niflix-dark);
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+        padding-bottom: 1rem;
+    }
+    .navbar-nav .nav-item {
+        border-bottom: 1px solid var(--niflix-border);
+    }
+    .navbar-nav .nav-item:last-child {
+        border-bottom: none;
+    }
+}
+
+/* Main content adjustments for fixed header */
+main {
+    flex-grow: 1;
+    padding-top: 60px; /* Adjust for fixed header */
+    min-height: calc(100vh - 120px); /* Adjust for header and footer */
+    box-sizing: border-box;
+}
+
+/* General Custom Buttons */
+.btn-niflix {
+    background: var(--niflix-primary);
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-niflix:hover {
+    background: var(--niflix-secondary);
+    color: black; /* Keep text black on hover */
+}
+
+.btn-cancel {
+    background-color: var(--niflix-error);
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #d32f2f;
+}
+
+/* Custom Notification/Info Messages */
+.notification {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.notification.success {
+    background-color: var(--niflix-success);
+    color: white;
+}
+
+.notification.error {
+    background-color: var(--niflix-error);
+    color: white;
+}
+
+.notification.info {
+    background-color: var(--niflix-info);
+    color: white;
+}
+
+.info-message {
+    text-align: center;
+    padding: 15px;
+    background-color: #2a2a2a;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    color: var(--niflix-text-light);
+    font-style: italic;
+}
+
+.info-message a {
+    color: var(--niflix-primary);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.info-message a:hover {
+    text-decoration: underline;
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: var(--niflix-medium);
+    color: white;
+    margin-top: auto; /* Push footer to the bottom */
+}
+
+/* General card styling (used across multiple pages) */
+.card.bg-dark {
+    background-color: rgba(0, 0, 0, 0.7) !important; /* Slightly more transparent dark */
+}
+
+.card.bg-secondary {
+    background-color: var(--niflix-medium) !important; /* Custom secondary background */
+}
+
+.card.border-secondary {
+    border-color: var(--niflix-border) !important;
+}
+
+.form-control.bg-secondary,
+.form-select.bg-secondary {
+    background-color: var(--niflix-light-dark) !important;
+    color: var(--niflix-text-white);
+    border: 1px solid var(--niflix-border);
+}
+
+.form-control.bg-secondary:focus,
+.form-select.bg-secondary:focus {
+    border-color: var(--niflix-primary);
+    background-color: #2a2a2a !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 204, 0, 0.25);
+    color: var(--niflix-text-white);
+}
+
+/* Link color for action buttons */
+.btn-info {
+    background-color: #2196F3 !important;
+    color: white !important;
+}
+.btn-info:hover {
+    background-color: #1976D2 !important;
+}
+
+.btn-danger {
+    background-color: #f44336 !important;
+    color: white !important;
+}
+.btn-danger:hover {
+    background-color: #d32f2f !important;
+}

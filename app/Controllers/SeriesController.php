@@ -18,6 +18,11 @@ class SeriesController {
      * Menampilkan daftar semua series.
      */
     public function index() {
+        // Pastikan pengguna sudah login
+        if (!Session::has('user')) {
+            redirect('/auth/login');
+        }
+
         $series = $this->seriesModel->getAllSeries();
 
         // Tangani pesan dari parameter URL

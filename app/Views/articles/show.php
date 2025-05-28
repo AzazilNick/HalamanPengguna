@@ -67,8 +67,6 @@ if (strpos($authorPhotoUrl, 'default.png') !== false && !file_exists(PUBLIC_PATH
                             <button type="submit" class="btn">Kirim Komentar</button>
                         </form>
                     </div>
-                <?php else: ?>
-                    <p class="info-message">Anda harus <a href="<?= $basePath ?>/auth/login">login</a> untuk meninggalkan komentar.</p>
                 <?php endif; ?>
 
                 <div class="comments-list">

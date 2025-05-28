@@ -22,6 +22,11 @@ class ArticleController {
      * Menampilkan daftar semua artikel.
      */
     public function index() {
+        // Pastikan pengguna sudah login
+        if (!Session::has('user')) {
+            redirect('/auth/login');
+        }
+
         $articles = $this->articleModel->getAllArticles();
         view('articles/index', [
             'articles' => $articles,    

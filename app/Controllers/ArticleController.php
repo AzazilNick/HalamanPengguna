@@ -39,6 +39,10 @@ class ArticleController {
      * @param int $id ID artikel
      */
     public function show($id) {
+        if (!Session::has('user')) {
+            redirect('/auth/login');
+        }
+
         $article = $this->articleModel->findById($id);
 
         if (!$article) {
@@ -51,9 +55,6 @@ class ArticleController {
         $message = null;
         $messageType = null;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (!Session::has('user')) {
-                redirect('/auth/login?message=' . urlencode('Anda harus login untuk berkomentar.') . '&type=error');
-            }
 
             $commentText = trim($_POST['comment_text'] ?? '');
             $userId = Session::get('user')['id'];

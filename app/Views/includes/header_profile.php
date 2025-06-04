@@ -1,5 +1,5 @@
 <?php
-// niflix_project/app/Views/includes/header.php
+// niflix_project/app/Views/includes/header_profile.php
 
 $basePath = dirname($_SERVER['SCRIPT_NAME']);
 if ($basePath === '/') {
@@ -8,44 +8,13 @@ if ($basePath === '/') {
     $basePath = rtrim($basePath, '/');
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Niflix App' ?></title>
-    <link rel="stylesheet" href="<?= $basePath ?>/assets/css/global.css">
-    <?php
-
-    // Membuat path saat ini
-    $requestUri = $_SERVER['REQUEST_URI'];
-    // Untuk hanya memgambalikan path dari url
-    $path = parse_url($requestUri, PHP_URL_PATH);
-    // Mengubah path menjadi array
-    $pathSegments = explode('/', trim($path, '/'));
-
-    $pageCss = '';
-    // Periksa apakah string ada di array pathSegments
-    if (in_array('dashboard', $pathSegments)) {
-        $pageCss = 'dashboard.css';
-    } elseif (in_array('articles', $pathSegments) || in_array('comment', $pathSegments)) {
-        $pageCss = 'articles.css';
-    } elseif (in_array('admin', $pathSegments)) {
-        $pageCss = 'admin.css';
-    } elseif (in_array('profile', $pathSegments)) {
-        $pageCss = 'profile.css';
-    } elseif (in_array('daftar_series', $pathSegments)) {
-        $pageCss = 'series.css';
-    } elseif (in_array('daftar_film', $pathSegments)) {
-        $pageCss = 'film.css';
-    }
-
-    if ($pageCss) {
-        echo '<link rel="stylesheet" href="' . $basePath . '/assets/css/' . $pageCss . '">';
-    }
-    ?>
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="<?= $basePath ?>/assets/css/style.css"> <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
     <header>

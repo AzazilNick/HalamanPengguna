@@ -1,5 +1,5 @@
 <?php
-// niflix_project/app/Controllers/FilmsController.php
+// niflix_project/app/Controllers/FilmController.php
 
 require_once APP_ROOT . '/app/Core/Session.php';
 require_once APP_ROOT . '/app/Core/Functions.php';
@@ -15,9 +15,13 @@ class FilmController {
     }
 
     /**
-     * Menampilkan daftar semua series.
+     * Menampilkan daftar semua film.
      */
     public function index() {
+        if (!Session::has('user')) { //
+            redirect('/auth/login'); //
+        }
+
         $film = $this->filmModel->getAllFilms();
 
         // Tangani pesan dari parameter URL
@@ -34,8 +38,8 @@ class FilmController {
 
     /**
      * Menampilkan detail series tunggal.
-     * Ini opsional jika Anda ingin halaman detail untuk setiap series.
-     * @param int $id ID series
+     * Ini opsional jika Anda ingin halaman detail untuk setiap film.
+     * @param int $id ID film
      */
     public function show($id) {
         $film = $this->filmModel->findById($id);

@@ -18,7 +18,7 @@ class DashboardController {
         }
 
         // Data film dan series (sementara masih statis)
-        $movies = [
+        $film = [
             ["title" => "Inception", "image" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJyjBC4dx19LTH6CBmbDIpNCrelbYJSplrUA&s"],
             ["title" => "Interstellar", "image" => "https://upload.wikimedia.org/wikipedia/id/b/bc/Interstellar_film_poster.jpg"],
             ["title" => "The Dark Knight", "image" => "https://upload.wikimedia.org/wikipedia/id/8/8a/Dark_Knight.jpg"],
@@ -36,7 +36,7 @@ class DashboardController {
 
         $data = [
             'user_username' => Session::get('user')['username'] ?? 'Guest',
-            'movies' => $movies,
+            'film' => $film,
             'series' => $series
         ];
 

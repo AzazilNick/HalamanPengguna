@@ -48,7 +48,7 @@ class FilmController {
             redirect('/daftar_film?message=' . urlencode('Film tidak ditemukan.') . '&type=error');
         }
 
-        view('film', [
+        view('film/show', [
             'film' => $film,
             'title' => $film['title']
         ]);

@@ -89,4 +89,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- Slider Logic for Daftar Series Page ---
+    const seriesSliderContainer = document.querySelector('.series-container .slider-container');
+    const leftArrow = document.querySelector('.series-container .left-arrow');
+    const rightArrow = document.querySelector('.series-container .right-arrow');
+
+    if (seriesSliderContainer && leftArrow && rightArrow) {
+        const scrollAmount = seriesSliderContainer.offsetWidth / 4; // Scroll by approximately 4 items width
+
+        leftArrow.addEventListener('click', () => {
+            seriesSliderContainer.scrollBy({
+                left: -scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+
+        rightArrow.addEventListener('click', () => {
+            seriesSliderContainer.scrollBy({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+    }
 });

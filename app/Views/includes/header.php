@@ -39,6 +39,10 @@ if ($basePath === '/') {
         $pageCss = 'series.css';
     } elseif (in_array('daftar_film', $pathSegments)) {
         $pageCss = 'film.css';
+    } elseif (in_array('review_film', $pathSegments)) {
+        $pageCss = 'review.css';
+    } elseif (in_array('review_series', $pathSegments)) {
+        $pageCss = 'review.css';
     }
 
     if ($pageCss) {

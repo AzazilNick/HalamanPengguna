@@ -15,7 +15,16 @@ class SeriesController {
     }
 
     /**
-     * Menampilkan daftar semua series.
+     * Memastikan hanya admin yang bisa mengakses fungsi tertentu.
+     */
+    private function checkAdminAccess() {
+        if (!Session::has('user') || Session::get('user')['is_admin'] != 1) {
+            redirect('/dashboard?message=' . urlencode('Anda tidak memiliki izin untuk mengakses halaman ini.') . '&type=error');
+        }
+    }
+
+    /**
+     * Menampilkan daftar semua series (popular dan semua).
      */
     public function index() {
         // Pastikan pengguna sudah login
@@ -23,15 +32,19 @@ class SeriesController {
             redirect('/auth/login');
         }
 
-        $series = $this->seriesModel->getAllSeries();
+        // Ambil series populer (ID 1-8)
+        $popularSeries = $this->seriesModel->getSeriesByIdRange(1, 8);
+        // Ambil semua series
+        $allSeries = $this->seriesModel->getAllSeries();
 
         // Tangani pesan dari parameter URL
         $message = $_GET['message'] ?? null;
         $messageType = $_GET['type'] ?? null;
 
         view('series/index', [
-            'series' => $series,
-            'title' => 'Series Populer',
+            'popularSeries' => $popularSeries, // Data untuk bagian slider (populer)
+            'allSeries' => $allSeries,       // Data untuk bagian grid (semua)
+            'title' => 'Series Populer',     // Judul utama halaman
             'message' => $message,
             'message_type' => $messageType
         ]);
@@ -39,7 +52,6 @@ class SeriesController {
 
     /**
      * Menampilkan detail series tunggal.
-     * Ini opsional jika Anda ingin halaman detail untuk setiap series.
      * @param int $id ID series
      */
     public function show($id) {
@@ -55,8 +67,135 @@ class SeriesController {
         ]);
     }
 
-    // Methods for Create, Update, Delete series would go here if needed for full CRUD
-    // public function create() { ... }
-    // public function edit($id) { ... }
-    // public function delete($id) { ... }
+    /**
+     * Menampilkan formulir untuk membuat series baru atau memproses submission.
+     */
+    public function create() {
+        $this->checkAdminAccess(); // Hanya admin yang bisa mengakses
+
+        $message = null;
+        $messageType = null;
+        $title = $_POST['title'] ?? '';
+        $description = $_POST['description'] ?? '';
+        $releaseYear = $_POST['release_year'] ?? '';
+        $imageUrl = $_POST['image_url'] ?? '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $title = trim($_POST['title'] ?? '');
+            $description = trim($_POST['description'] ?? '');
+            $releaseYear = filter_var($_POST['release_year'] ?? '', FILTER_VALIDATE_INT);
+            $imageUrl = trim($_POST['image_url'] ?? '');
+
+            if (empty($title) || empty($description) || empty($releaseYear)) {
+                $message = 'Judul, deskripsi, dan tahun rilis tidak boleh kosong.';
+                $messageType = 'error';
+            } elseif ($releaseYear === false || $releaseYear <= 0) {
+                $message = 'Tahun rilis harus berupa angka valid.';
+                $messageType = 'error';
+            } else {
+                if ($this->seriesModel->create($title, $description, $releaseYear, $imageUrl)) {
+                    $message = 'Series berhasil ditambahkan!';
+                    $messageType = 'success';
+                    redirect('/daftar_series?message=' . urlencode($message) . '&type=' . urlencode($messageType));
+                    exit();
+                } else {
+                    $message = 'Gagal menambahkan series.';
+                    $messageType = 'error';
+                }
+            }
+        }
+
+        view('series/create', [
+            'title' => 'Tambah Series Baru',
+            'message' => $message,
+            'message_type' => $messageType,
+            'series' => [
+                'title' => $title,
+                'description' => $description,
+                'release_year' => $releaseYear,
+                'image_url' => $imageUrl
+            ]
+        ]);
+    }
+
+    /**
+     * Menampilkan formulir untuk mengedit series yang sudah ada atau memproses submission.
+     * @param int $id ID series
+     */
+    public function edit($id) {
+        $this->checkAdminAccess(); // Hanya admin yang bisa mengakses
+
+        $series = $this->seriesModel->findById($id);
+
+        if (!$series) {
+            redirect('/daftar_series?message=' . urlencode('Series tidak ditemukan.') . '&type=error');
+        }
+
+        $message = null;
+        $messageType = null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $title = trim($_POST['title'] ?? '');
+            $description = trim($_POST['description'] ?? '');
+            $releaseYear = filter_var($_POST['release_year'] ?? '', FILTER_VALIDATE_INT);
+            $imageUrl = trim($_POST['image_url'] ?? '');
+
+            if (empty($title) || empty($description) || empty($releaseYear)) {
+                $message = 'Judul, deskripsi, dan tahun rilis tidak boleh kosong.';
+                $messageType = 'error';
+            } elseif ($releaseYear === false || $releaseYear <= 0) {
+                $message = 'Tahun rilis harus berupa angka valid.';
+                $messageType = 'error';
+            } else {
+                if ($this->seriesModel->update($id, $title, $description, $releaseYear, $imageUrl)) {
+                    $message = 'Series berhasil diperbarui!';
+                    $messageType = 'success';
+                    $series = $this->seriesModel->findById($id);
+                    redirect('/daftar_series/show/' . $id . '?message=' . urlencode($message) . '&type=' . urlencode($messageType));
+                    exit();
+                } else {
+                    $message = 'Gagal memperbarui series.';
+                    $messageType = 'error';
+                }
+            }
+        }
+
+        if (isset($_GET['message'])) {
+            $message = $_GET['message'];
+            $messageType = $_GET['type'] ?? 'info';
+        }
+
+        view('series/edit', [
+            'title' => 'Edit Series',
+            'series' => $series,
+            'message' => $message,
+            'message_type' => $messageType
+        ]);
+    }
+
+    /**
+     * Menghapus series.
+     * @param int $id ID series yang akan dihapus
+     */
+    public function delete($id) {
+        $this->checkAdminAccess(); // Hanya admin yang bisa mengakses
+
+        $series = $this->seriesModel->findById($id);
+
+        if (!$series) {
+            redirect('/daftar_series?message=' . urlencode('Series tidak ditemukan.') . '&type=error');
+        }
+
+        $message = '';
+        $messageType = '';
+
+        if ($this->seriesModel->delete($id)) {
+            $message = 'Series berhasil dihapus!';
+            $messageType = 'success';
+        } else {
+            $message = 'Gagal menghapus series.';
+            $messageType = 'error';
+        }
+        redirect('/daftar_series?message=' . urlencode($message) . '&type=' . urlencode($messageType));
+    }
 }

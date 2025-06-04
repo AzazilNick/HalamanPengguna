@@ -1,0 +1,22 @@
+# niflix_project/public/.htaccess
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # JIKA ANDA MENGAKSESNYA DENGAN URL SEPERTI INI: http://localhost/niflix_project/public/
+    # MAKA GUNAKAN RewriteBase ini:
+    RewriteBase /niflix_project/public/
+
+    # JIKA ANDA MENGAKSESNYA LANGSUNG DI ROOT DOMAIN (misal: http://localhost/):
+    # (ini terjadi jika Anda meletakkan konten folder 'public' langsung di htdocs,
+    # atau jika Anda menggunakan Virtual Host untuk domain 'niflix_project')
+    # Maka GANTI RewriteBase di atas menjadi:
+    # RewriteBase /
+
+    # Jangan mengarahkan ulang jika file atau direktori ada secara fisik
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Arahkan semua permintaan ke index.php
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>

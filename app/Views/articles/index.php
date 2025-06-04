@@ -24,11 +24,7 @@ if ($basePath === '/') {
             <div class="notification <?= escape_html($message_type ?? '') ?>"><?= escape_html($message) ?></div>
         <?php endif; ?>
 
-        <?php if (Session::has('user')): // Hanya tampilkan tombol buat artikel jika sudah login ?>
-            <p><a href="<?= $basePath ?>/articles/create" class="btn btn-create-article">Buat Artikel Baru</a></p>
-        <?php else: ?>
-            <p class="info-message">Login untuk membuat artikel baru.</p>
-        <?php endif; ?>
+        <p><a href="<?= $basePath ?>/articles/create" class="btn btn-create-article">Buat Artikel Baru</a></p>
 
 
         <?php if (!empty($articles)): ?>

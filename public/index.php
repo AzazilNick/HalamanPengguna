@@ -96,6 +96,16 @@ if (!empty($uriSegments[0])) {
                 $controllerFilePath = APP_ROOT . '/app/Controllers/FilmController.php';
                 array_shift($uriSegments); // Hapus array 'daftar_film'
                 break;
+            case 'review_film':
+                $controllerName = 'ReviewController';
+                $controllerFilePath = APP_ROOT . '/app/Controllers/ReviewController.php';
+                array_shift($uriSegments); // Hapus array 'review_film'
+                break;
+            case 'review_series':
+                $controllerName = 'ReviewSeriesController';
+                $controllerFilePath = APP_ROOT . '/app/Controllers/ReviewSeriesController.php';
+                array_shift($uriSegments); // Hapus array 'review_series'
+                break;
             default:
                 break;
         }

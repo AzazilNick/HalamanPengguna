@@ -37,8 +37,9 @@ if ($basePath === '/') {
         $pageCss = 'profile.css';
     } elseif (in_array('daftar_series', $pathSegments)) {
         $pageCss = 'series.css';
+    } elseif (in_array('daftar_film', $pathSegments)) {
+        $pageCss = 'film.css';
     }
-
 
     if ($pageCss) {
         echo '<link rel="stylesheet" href="' . $basePath . '/assets/css/' . $pageCss . '">';

@@ -96,7 +96,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const rightArrow = document.querySelector('.series-container .right-arrow');
 
     if (seriesSliderContainer && leftArrow && rightArrow) {
-        const scrollAmount = seriesSliderContainer.offsetWidth / 4; // Scroll by approximately 4 items width
+        const calculateScrollAmount = () => {
+            const firstSliderItem = seriesSliderContainer.querySelector('.slider-item');
+            let itemWidth = 0;
+            if (firstSliderItem) {
+                // Lebar item + gap kanan (asumsi gap adalah 15px dari series.css)
+                itemWidth = firstSliderItem.offsetWidth + 15;
+            }
+
+            // Tentukan berapa item yang bergeser berdasarkan lebar layar
+            let itemsToScroll;
+            if (window.innerWidth <= 425) { // Contoh breakpoint untuk mobile/tablet
+                itemsToScroll = 2; // Geser 2 item di mobile
+            } else {
+                itemsToScroll = 4; // Geser 4 item di desktop
+            }
+
+            // Jika itemWidth belum terdefinisi atau 0, fallback ke perhitungan lebar kontainer
+            return itemWidth > 0 ? itemWidth * itemsToScroll : seriesSliderContainer.offsetWidth / itemsToScroll;
+        };
+
+        // Inisialisasi scrollAmount saat DOMContentLoaded
+        let scrollAmount = calculateScrollAmount();
 
         leftArrow.addEventListener('click', () => {
             seriesSliderContainer.scrollBy({
@@ -110,6 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 left: scrollAmount,
                 behavior: 'smooth'
             });
+        });
+
+        // Update scrollAmount saat ukuran jendela berubah
+        window.addEventListener('resize', () => {
+            scrollAmount = calculateScrollAmount();
         });
     }
 });

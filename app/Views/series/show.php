@@ -34,7 +34,7 @@ $isAdmin = isset($currentUser) && $currentUser['is_admin'] == 1;
                 </div>
 
                 <?php if ($isAdmin): // Tampilkan tombol edit/hapus hanya untuk admin ?>
-                    <div class="article-actions-bottom">
+                    <div class="series-actions">
                         <a href="<?= $basePath ?>/daftar_series/edit/<?= escape_html($series['id']) ?>" class="btn-edit">Edit Series</a>
                         <a href="<?= $basePath ?>/daftar_series/delete/<?= escape_html($series['id']) ?>"
                            onclick="return confirm('Yakin ingin menghapus series ini?')" class="btn-delete">Hapus Series</a>

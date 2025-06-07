@@ -42,6 +42,9 @@ $isAdmin = isset($currentUser) && $currentUser['is_admin'] == 1;
                                 <?php else: ?>
                                     <img src="<?= $basePath ?>/assets/img/default_series_thumb.png" alt="No Image" class="series-thumbnail">
                                 <?php endif; ?>
+                                <div class="series-hover-info">
+                                    <h3><?= escape_html($s['title']) ?> (<?= escape_html($s['release_year']) ?>)</h3>
+                                </div>
                             </a>
                             <div class="slider-stats">
                                 <span class="stat-item"><i class='bx bxs-heart'></i> <?= escape_html($s['likes_count']) ?></span>

@@ -330,6 +330,17 @@ body {
     border-radius: 5px;
 }
 
+.input-group select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background: #333;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+}
+
 .form-container form label { /* TAMBAHKAN BLOK INI */
     display: block;
     color: #ffcc00;

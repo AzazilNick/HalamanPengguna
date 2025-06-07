@@ -43,7 +43,7 @@ $isAdmin = isset($currentUser) && $currentUser['is_admin'] == 1;
                                     <img src="<?= $basePath ?>/assets/img/default_series_thumb.png" alt="No Image" class="series-thumbnail">
                                 <?php endif; ?>
                             </a>
-                            <div class="series-stats">
+                            <div class="slider-stats">
                                 <span class="stat-item"><i class='bx bxs-heart'></i> <?= escape_html($s['likes_count']) ?></span>
                                 <span class="stat-item"><i class='bx bxs-check-circle'></i> <?= escape_html($s['watched_count']) ?></span>
                                 <span class="stat-item"><i class='bx bxs-message-dots'></i> <?= escape_html($s['comments_count']) ?></span>

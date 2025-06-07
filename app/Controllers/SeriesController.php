@@ -33,7 +33,7 @@ class SeriesController {
         }
 
         // Ambil series populer (ID 1-8)
-        $popularSeries = $this->seriesModel->getSeriesByIdRange(1, 8);
+        $popularSeries = $this->seriesModel->getSeriesByIdRange();
         // Ambil semua series
         $allSeries = $this->seriesModel->getAllSeries();
 
@@ -79,12 +79,16 @@ class SeriesController {
         $description = $_POST['description'] ?? '';
         $releaseYear = $_POST['release_year'] ?? '';
         $imageUrl = $_POST['image_url'] ?? '';
+        // Initialize $is_popular with a default value for GET requests
+        $is_popular = 0; // Default to not popular (0)
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title = trim($_POST['title'] ?? '');
             $description = trim($_POST['description'] ?? '');
             $releaseYear = filter_var($_POST['release_year'] ?? '', FILTER_VALIDATE_INT);
             $imageUrl = trim($_POST['image_url'] ?? '');
+            $is_popular_str = $_POST['is_popular'] ?? 'NO'; // Re-capture for POST
+            $is_popular = ($is_popular_str === 'YES') ? 1 : 0; // Convert to integer (0 or 1)
 
             if (empty($title) || empty($description) || empty($releaseYear)) {
                 $message = 'Judul, deskripsi, dan tahun rilis tidak boleh kosong.';
@@ -93,7 +97,7 @@ class SeriesController {
                 $message = 'Tahun rilis harus berupa angka valid.';
                 $messageType = 'error';
             } else {
-                if ($this->seriesModel->create($title, $description, $releaseYear, $imageUrl)) {
+                if ($this->seriesModel->create($title, $description, $releaseYear, $imageUrl, $is_popular)) {
                     $message = 'Series berhasil ditambahkan!';
                     $messageType = 'success';
                     redirect('/daftar_series?message=' . urlencode($message) . '&type=' . urlencode($messageType));
@@ -113,7 +117,8 @@ class SeriesController {
                 'title' => $title,
                 'description' => $description,
                 'release_year' => $releaseYear,
-                'image_url' => $imageUrl
+                'image_url' => $imageUrl,
+                'is_popular' => $is_popular // This will now always be defined
             ]
         ]);
     }
@@ -139,6 +144,8 @@ class SeriesController {
             $description = trim($_POST['description'] ?? '');
             $releaseYear = filter_var($_POST['release_year'] ?? '', FILTER_VALIDATE_INT);
             $imageUrl = trim($_POST['image_url'] ?? '');
+            $is_popular_str = $_POST['is_popular'] ?? 'NO'; // Capture string from POST
+            $is_popular = ($is_popular_str === 'YES') ? 1 : 0; // Convert to integer
 
             if (empty($title) || empty($description) || empty($releaseYear)) {
                 $message = 'Judul, deskripsi, dan tahun rilis tidak boleh kosong.';
@@ -147,7 +154,8 @@ class SeriesController {
                 $message = 'Tahun rilis harus berupa angka valid.';
                 $messageType = 'error';
             } else {
-                if ($this->seriesModel->update($id, $title, $description, $releaseYear, $imageUrl)) {
+                // Pass the converted integer value for is_popular
+                if ($this->seriesModel->update($id, $title, $description, $releaseYear, $imageUrl, $is_popular)) {
                     $message = 'Series berhasil diperbarui!';
                     $messageType = 'success';
                     $series = $this->seriesModel->findById($id);
@@ -169,7 +177,7 @@ class SeriesController {
             'title' => 'Edit Series',
             'series' => $series,
             'message' => $message,
-            'message_type' => $messageType
+            'message_type' => $messageType,
         ]);
     }
 

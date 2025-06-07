@@ -17,6 +17,7 @@ $seriesTitle = $series['title'] ?? '';
 $seriesDescription = $series['description'] ?? '';
 $seriesReleaseYear = $series['release_year'] ?? '';
 $seriesImageUrl = $series['image_url'] ?? ''; // Ambil URL gambar yang di-submit
+$is_popular = $series['is_popular'] ?? '';
 ?>
 
 <main>
@@ -46,6 +47,14 @@ $seriesImageUrl = $series['image_url'] ?? ''; // Ambil URL gambar yang di-submit
                 <label for="image_url">URL Gambar Series (Opsional):</label>
                 <input type="text" id="image_url" name="image_url" placeholder="http://example.com/image.jpg" value="<?= escape_html($seriesImageUrl) ?>">
                 <small>Masukkan URL lengkap gambar series.</small>
+            </div>
+
+            <div class="input-group">
+                    <label for="is_popular">Status Popular:</label>
+                    <select id="is_popular" name="is_popular">
+                        <option value="NO" <?= $series['is_popular'] == 0 ? 'selected' : '' ?>>Tidak</option>
+                        <option value="YES" <?= $series['is_popular'] == 1 ? 'selected' : '' ?>>Ya</option>
+                    </select>
             </div>
 
             <button type="submit" class="btn">Tambah Series</button>

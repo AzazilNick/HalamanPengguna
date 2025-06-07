@@ -42,16 +42,12 @@ $isAdmin = isset($currentUser) && $currentUser['is_admin'] == 1;
                                 <?php else: ?>
                                     <img src="<?= $basePath ?>/assets/img/default_series_thumb.png" alt="No Image" class="series-thumbnail">
                                 <?php endif; ?>
-                                <h4><?= escape_html($s['title']) ?></h4>
                             </a>
-
-                            <?php if ($isAdmin): // Tampilkan tombol edit/hapus hanya untuk admin ?>
-                                <div class="series-actions">
-                                    <a href="<?= $basePath ?>/daftar_series/edit/<?= escape_html($s['id']) ?>" class="btn-edit">Edit</a>
-                                    <a href="<?= $basePath ?>/daftar_series/delete/<?= escape_html($s['id']) ?>"
-                                       onclick="return confirm('Yakin ingin menghapus series ini?')" class="btn-delete">Hapus</a>
-                                </div>
-                            <?php endif; ?>
+                            <div class="series-stats">
+                                <span class="stat-item"><i class='bx bxs-heart'></i> <?= escape_html($s['likes_count']) ?></span>
+                                <span class="stat-item"><i class='bx bxs-check-circle'></i> <?= escape_html($s['watched_count']) ?></span>
+                                <span class="stat-item"><i class='bx bxs-message-dots'></i> <?= escape_html($s['comments_count']) ?></span>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -64,14 +60,24 @@ $isAdmin = isset($currentUser) && $currentUser['is_admin'] == 1;
         <h1>Daftar Series</h1>
 
         <?php if (!empty($allSeries)): ?>
-            <div class="series-list article-list">
+            <div class="series-list">
                 <?php foreach ($allSeries as $s): ?>
-                        <div class="series-item article-item">
-                            <?php if (!empty($s['image_url'])): ?>
-                                <a href="<?= $basePath ?>/daftar_series/show/<?= escape_html($s['id']) ?>">
-                                <img src="<?= escape_html($s['image_url']) ?>" alt="<?= escape_html($s['title']) ?>" class="series-thumbnail">
-                                </a>
-                            <?php endif; ?>
+                        <div class="series-item">
+                            <a href="<?= $basePath ?>/daftar_series/show/<?= escape_html($s['id']) ?>">
+                                <?php if (!empty($s['image_url'])): ?>
+                                    <img src="<?= escape_html($s['image_url']) ?>" alt="<?= escape_html($s['title']) ?>" class="series-thumbnail">
+                                <?php else: ?>
+                                    <img src="<?= $basePath ?>/assets/img/default_series_thumb.png" alt="No Image" class="series-thumbnail">
+                                <?php endif; ?>
+                                <div class="series-hover-info">
+                                    <h3><?= escape_html($s['title']) ?> (<?= escape_html($s['release_year']) ?>)</h3>
+                                </div>
+                            </a>
+                            <div class="series-stats">
+                                <span class="stat-item"><i class='bx bxs-heart'></i> <?= escape_html($s['likes_count']) ?></span>
+                                <span class="stat-item"><i class='bx bxs-check-circle'></i> <?= escape_html($s['watched_count']) ?></span>
+                                <span class="stat-item"><i class='bx bxs-message-dots'></i> <?= escape_html($s['comments_count']) ?></span>
+                            </div>
                         </div>
                 <?php endforeach; ?>
             </div>

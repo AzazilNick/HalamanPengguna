@@ -50,6 +50,14 @@ $seriesImageUrl = escape_html($series['image_url']);
                     <small>Masukkan URL lengkap gambar series.</small>
                 </div>
 
+                <div class="input-group">
+                    <label for="is_popular">Status Popular:</label>
+                    <select id="is_popular" name="is_popular">
+                        <option value="NO" <?= $series['is_popular'] == 0 ? 'selected' : '' ?>>Tidak</option>
+                        <option value="YES" <?= $series['is_popular'] == 1 ? 'selected' : '' ?>>Ya</option>
+                    </select>
+                </div>
+
                 <button type="submit" class="btn">Perbarui Series</button>
                 <a href="<?= $basePath ?>/daftar_series/show/<?= escape_html($series['id']) ?>" class="btn btn-cancel">Batal</a>
             </form>

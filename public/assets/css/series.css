@@ -192,6 +192,29 @@ body {
     font-size: 1.1em;
 }
 
+/* NEW: Series Stats (Likes, Watched, Comments) */
+.slider-stats {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 0px; /* Push to bottom */
+    padding-top: 15px;
+    border-top: 1px solid #444;
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+.slider-stats .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.slider-stats .stat-item i {
+    color: #ffcc00; /* Icon color */
+    font-size: 1.1em;
+}
+
 /* Detail Series (single-article) */
 .single-article { /* Reusing article styles as it's structurally similar */
     background: #222;
@@ -388,6 +411,7 @@ body {
 
     .slider-item {
         min-width: 190px;
+        height: 307px;
     }
 
     .series-list {
@@ -396,7 +420,8 @@ body {
     }
     .series-item {
         padding: 8px;
-        height: 250px; /* Adjust height for smaller screens */
+        height: 210px; /* Adjust height for smaller screens */
+        margin-top: 10px;
     }
     .series-item img {
         max-width: 160px;
@@ -412,6 +437,7 @@ body {
     .series-stats {
         font-size: 0.8em;
         padding-top: 5px;
+        margin-top: -20px;
     }
     .series-stats .stat-item i {
         font-size: 1em;
@@ -428,7 +454,8 @@ body {
     }
     .series-item {
         padding: 8px;
-        height: 250px;
+        height: 210px;
+        margin-bottom: 10px;
     }
     .series-item img {
         max-width: 160px;
@@ -446,7 +473,7 @@ body {
 @media (max-width: 321px) {
     .slider-item {
         min-width: 135px;
-        height: 250px;
+        height: 210px;
     }
     .series-list {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Target 1-2 kolom di mobile */
@@ -454,7 +481,7 @@ body {
     }
     .series-item {
         padding: 8px;
-        height: 250px;
+        height: 210px;
     }
     .series-item img {
         max-width: 160px;
@@ -470,5 +497,11 @@ body {
 
     .series-thumbnail {
         height: 200px;
+    }
+    .series-stats {
+        height: 15px;
+    }
+    .slider-stats {
+        height: 30px;
     }
 }

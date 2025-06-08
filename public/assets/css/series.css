@@ -142,7 +142,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 300px; /* Cover the image area */
+    height: 305px; /* Cover the image area */
     background: rgba(0, 0, 0, 0.8);
     color: white;
     display: flex;

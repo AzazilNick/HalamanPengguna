@@ -214,7 +214,7 @@ footer {
         margin: 0;
         flex-wrap: wrap; /* Izinkan wrap agar tidak terpotong jika terlalu banyak item */
         justify-content: flex-end;
-        width: auto; /* Biarkan lebar ul menyesuaikan konten */
+        width: 1200px; /* Biarkan lebar ul menyesuaikan konten */
     }
 
     .nav-menu ul li {

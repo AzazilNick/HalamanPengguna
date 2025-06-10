@@ -116,21 +116,36 @@ class ArticleController {
                 $message = 'Judul dan konten tidak boleh kosong.';
                 $messageType = 'error';
             } else {
-                if ($this->articleModel->create($userId, $title, $content)) {
-                    $message = 'Artikel berhasil dipublikasikan!';
-                    $messageType = 'success';
-                    redirect('/articles?message=' . urlencode($message) . '&type=' . urlencode($messageType));
-                    exit();
-                } else {
-                    $message = 'Gagal mempublikasikan artikel.';
-                    $messageType = 'error';
+                try { // Tambahkan blok try-catch di sini
+                    if ($this->articleModel->create($userId, $title, $content)) {
+                        $message = 'Artikel berhasil dipublikasikan!';
+                        $messageType = 'success';
+                        redirect('/articles?message=' . urlencode($message) . '&type=' . urlencode($messageType));
+                        exit();
+                    } else {
+                        $message = 'Gagal mempublikasikan artikel.';
+                        $messageType = 'error';
+                    }
+                } catch (PDOException $e) { // Tangkap PDOException
+                    if ($e->getCode() == '23000') { // Kode SQLSTATE untuk integrity constraint violation
+                        $message = 'Judul artikel sudah ada. Mohon gunakan judul lain.';
+                        $messageType = 'error';
+                    } else {
+                        $message = 'Terjadi kesalahan basis data: ' . $e->getMessage();
+                        $messageType = 'error';
+                    }
                 }
             }
         }
         view('articles/create', [
             'title' => 'Buat Artikel Baru',
             'message' => $message,
-            'message_type' => $messageType
+            'message_type' => $messageType,
+            // Pertahankan nilai input yang dikirimkan agar tidak hilang saat ada error
+            'article' => [
+                'title' => $_POST['title'] ?? '',
+                'content' => $_POST['content'] ?? ''
+            ]
         ]);
     }
 
@@ -166,20 +181,30 @@ class ArticleController {
                 $message = 'Judul dan konten tidak boleh kosong.';
                 $messageType = 'error';
             } else {
-                if ($this->articleModel->update($id, $title, $content)) {
-                    $message = 'Artikel berhasil diperbarui!';
-                    $messageType = 'success';
-                    redirect('/articles/show/' . $id . '?message=' . urlencode($message) . '&type=' . urlencode($messageType));
-                    exit();
-                } else {
-                    $message = 'Gagal memperbarui artikel.';
-                    $messageType = 'error';
+                try { // Tambahkan blok try-catch di sini
+                    if ($this->articleModel->update($id, $title, $content)) {
+                        $message = 'Artikel berhasil diperbarui!';
+                        $messageType = 'success';
+                        redirect('/articles/show/' . $id . '?message=' . urlencode($message) . '&type=' . urlencode($messageType));
+                        exit();
+                    } else {
+                        $message = 'Gagal memperbarui artikel.';
+                        $messageType = 'error';
+                    }
+                } catch (PDOException $e) { // Tangkap PDOException
+                    if ($e->getCode() == '23000') { // Kode SQLSTATE untuk integrity constraint violation
+                        $message = 'Judul artikel sudah ada. Mohon gunakan judul lain.';
+                        $messageType = 'error';
+                    } else {
+                        $message = 'Terjadi kesalahan basis data: ' . $e->getMessage();
+                        $messageType = 'error';
+                    }
                 }
             }
         }
         view('articles/edit', [
             'title' => 'Edit Artikel',
-            'article' => $article,
+            'article' => $article, // Pastikan ini tetap ada untuk mengisi form
             'message' => $message,
             'message_type' => $messageType
         ]);

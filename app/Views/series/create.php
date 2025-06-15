@@ -13,11 +13,11 @@ if ($basePath === '/') {
 }
 
 // Ambil data dari $series jika ada (untuk pre-fill form setelah validasi gagal)
-$seriesTitle = $series['title'] ?? '';
-$seriesDescription = $series['description'] ?? '';
-$seriesReleaseYear = $series['release_year'] ?? '';
-$seriesImageUrl = $series['image_url'] ?? ''; // Ambil URL gambar yang di-submit
-$is_popular = $series['is_popular'] ?? '';
+$seriesTitle = $_POST['title'] ?? ($series['title'] ?? '');
+$seriesDescription = $_POST['description'] ?? ($series['description'] ?? '');
+$seriesReleaseYear = $_POST['release_year'] ?? ($series['release_year'] ?? '');
+$seriesImageUrl = $_POST['image_url'] ?? ($series['image_url'] ?? ''); // Ambil URL gambar yang di-submit
+$is_popular = $_POST['is_popular'] ?? ($series['is_popular'] ?? 0); // Handle 'is_popular'
 ?>
 
 <main>
@@ -28,32 +28,45 @@ $is_popular = $series['is_popular'] ?? '';
             <div class="notification <?= escape_html($message_type ?? '') ?>"><?= escape_html($message) ?></div>
         <?php endif; ?>
 
-        <form action="<?= $basePath ?>/daftar_series/create" method="POST"> <div class="input-group">
+        <form action="<?= $basePath ?>/daftar_series/create" method="POST">
+            <div class="input-group">
                 <label for="title">Judul Series:</label>
-                <input type="text" id="title" name="title" required value="<?= escape_html($seriesTitle) ?>">
+                <input type="text" id="title" name="title" required value="<?= escape_html($seriesTitle) ?>" data-field="title">
+                <span class="validation-message error" id="title-error">
+                    <?php echo isset($error['title']) ? escape_html($error['title']) : ''; ?>
+                </span>
             </div>
 
             <div class="input-group">
                 <label for="description">Deskripsi Series:</label>
-                <textarea id="description" name="description" rows="10" required><?= escape_html($seriesDescription) ?></textarea>
+                <textarea id="description" name="description" rows="10" required data-field="description"><?= escape_html($seriesDescription) ?></textarea>
+                <span class="validation-message error" id="description-error">
+                    <?php echo isset($error['description']) ? escape_html($error['description']) : ''; ?>
+                </span>
             </div>
 
             <div class="input-group">
                 <label for="release_year">Tahun Rilis:</label>
-                <input type="number" id="release_year" name="release_year" required value="<?= escape_html($seriesReleaseYear) ?>">
+                <input type="number" id="release_year" name="release_year" required value="<?= escape_html($seriesReleaseYear) ?>" data-field="release_year">
+                <span class="validation-message error" id="release_year-error">
+                    <?php echo isset($error['release_year']) ? escape_html($error['release_year']) : ''; ?>
+                </span>
             </div>
 
             <div class="input-group">
                 <label for="image_url">URL Gambar Series (Opsional):</label>
-                <input type="text" id="image_url" name="image_url" placeholder="http://example.com/image.jpg" value="<?= escape_html($seriesImageUrl) ?>">
+                <input type="text" id="image_url" name="image_url" placeholder="http://example.com/image.jpg" value="<?= escape_html($seriesImageUrl) ?>" data-field="image_url">
+                <span class="validation-message error" id="image_url-error">
+                    <?php echo isset($error['image_url']) ? escape_html($error['image_url']) : ''; ?>
+                </span>
                 <small>Masukkan URL lengkap gambar series.</small>
             </div>
 
             <div class="input-group">
                     <label for="is_popular">Status Popular:</label>
                     <select id="is_popular" name="is_popular">
-                        <option value="NO" <?= $series['is_popular'] == 0 ? 'selected' : '' ?>>Tidak</option>
-                        <option value="YES" <?= $series['is_popular'] == 1 ? 'selected' : '' ?>>Ya</option>
+                        <option value="0" <?= $is_popular == 0 ? 'selected' : '' ?>>Tidak</option>
+                        <option value="1" <?= $is_popular == 1 ? 'selected' : '' ?>>Ya</option>
                     </select>
             </div>
 

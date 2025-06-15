@@ -15,7 +15,6 @@ body {
     100% { background-position: 0% 0%; }
 }
 
-
 .series-container,
 .article-detail-container, /* Pertahankan ini jika series/show.php menggunakannya */
 .form-container { /* TAMBAHKAN ATAU PERBARUI BLOK INI */
@@ -34,6 +33,7 @@ body {
     color: #ffcc00;
     text-align: center;
     margin-bottom: 30px;
+    margin-top: 10px;
 }
 
 
@@ -262,12 +262,77 @@ body {
     margin-bottom: 20px;
 }
 
-.series-actions a {
+/* .series-actions a {
     color: #008080;
     text-decoration: none;
+} */
+
+.series-actions {
+    display: flex; /* Untuk menempatkan tombol bersebelahan */
+    gap: 15px; /* Jarak antar tombol */
+    justify-content: center; /* Pusatkan tombol */
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #333; /* Garis pemisah opsional */
+}
+
+.series-actions .btn-edit,
+.series-actions .btn-delete {
+    display: inline-block; /* Agar bisa menerapkan padding dll. */
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 8px; /* Sedikit lebih melengkung */
+    font-weight: bold;
+    font-size: 1.05em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    min-width: 120px; /* Lebar minimum agar konsisten */
+    border: none; /* Hapus border default */
+    cursor: pointer;
+}
+
+.series-actions .btn-edit {
+    background-color: #008080; /* Warna hijau kebiruan untuk edit */
+    color: white; /* Teks putih */
+}
+
+.series-actions .btn-edit:hover {
+    background-color: #006666; /* Sedikit lebih gelap saat hover */
+    transform: translateY(-2px); /* Efek angkat */
+}
+
+.series-actions .btn-delete {
+    background-color: #e50914; /* Merah terang khas Netflix untuk hapus */
+    color: white; /* Teks putih */
+}
+
+.series-actions .btn-delete:hover {
+    background-color: #b20710; /* Merah lebih gelap saat hover */
+    transform: translateY(-2px); /* Efek angkat */
 }
 
 .btn-link {
+    display: inline-block;
+    padding: 12px 25px; /* Sesuaikan padding */
+    background: #ffcc00;
+    color: #333; /* Teks lebih gelap agar kontras */
+    text-decoration: none;
+    border-radius: 8px; /* Konsisten dengan tombol lain */
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s ease;
+    border: none;
+    cursor: pointer;
+    margin: 15px 120px; /* Sesuaikan margin */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tambah bayangan */
+}
+
+.btn-link:hover {
+    background: #e6b800; 
+    transform: translateY(-2px);
+}
+
+/* .btn-link {
     display: inline-block;
     padding: 10px 20px;
     background: #ffcc00;
@@ -279,7 +344,7 @@ body {
     border: none;
     cursor: pointer;
     margin: 10px 120px;
-}
+} */
 
 /* Styling for "Daftar Series" (All Series section) */
 .series-list { /* This now acts as the grid container */
@@ -438,10 +503,28 @@ body {
         font-size: 1em;
     }
 
-    .btn-link {
+    /* .btn-link {
         padding: 10px 20px;
         border-radius: 5px;
         margin: 5px 90px;
+    } */
+
+    .series-actions {
+        flex-direction: column; /* Tombol stack vertikal di layar kecil */
+        align-items: center; /* Pusatkan saat vertikal */
+        gap: 10px; /* Kurangi gap */
+    }
+
+    .series-actions .btn-edit,
+    .series-actions .btn-delete,
+    .btn-link {
+        width: 80%; /* Buat tombol agak lebar */
+        max-width: 250px; /* Batasi lebar maksimal */
+        margin: 5px auto; /* Pusatkan secara horizontal */
+    }
+
+    .btn-link {
+        margin: 10px auto; /* Override margin yang lebih spesifik untuk btn-link */
     }
 }
 

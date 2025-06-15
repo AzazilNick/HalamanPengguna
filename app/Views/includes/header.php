@@ -52,6 +52,10 @@ if ($basePath === '/') {
     }
     ?>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <script>
+        const BASE_URL = '<?= $basePath ?>';
+    </script>
 </head>
 <body>
     <header>

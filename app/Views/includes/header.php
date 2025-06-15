@@ -38,9 +38,14 @@ if ($basePath === '/') {
     } elseif (in_array('daftar_series', $pathSegments)) {
         $pageCss = 'series.css';
     } elseif (in_array('daftar_film', $pathSegments)) {
-        $pageCss = 'film.css';
+        $pageCss = 'series.css';
+    } elseif (in_array('review_films', $pathSegments)) { // Keep existing
+        $pageCss = 'review.css';
+    } elseif (in_array('review_series', $pathSegments)) { // Keep existing
+        $pageCss = 'review.css';
+    } elseif (in_array('komentar_rating', $pathSegments)) { // New
+        $pageCss = 'review.css'; // Reusing review.css, adjust if you want a new one
     }
-
 
     if ($pageCss) {
         echo '<link rel="stylesheet" href="' . $basePath . '/assets/css/' . $pageCss . '">';
@@ -58,13 +63,14 @@ if ($basePath === '/') {
                 <?php if (Session::has('user') && Session::get('user')['is_admin'] == 1) : ?>
                     <li><a href="<?= $basePath ?>/admin">Kelola Akun</a></li>
                 <?php endif; ?>
-                <li><a href="<?= $basePath ?>/review_film">Review Film</a></li>
-                <li><a href="<?= $basePath ?>/review_series">Review Series</a></li>
-                <li><a href="<?= $basePath ?>/daftar_film">Daftar Film</a></li>
+                <li><a href="<?= $basePath ?>/review_films">Review Film</a></li> <li><a href="<?= $basePath ?>/review_series">Review Series</a></li> <li><a href="<?= $basePath ?>/daftar_film">Daftar Film</a></li>
                 <li><a href="<?= $basePath ?>/daftar_series">Daftar Series</a></li>
-                <li><a href="<?= $basePath ?>/komentar_rating">Komentar & Rating</a></li>
-                <li><a href="<?= $basePath ?>/profile">Profile</a></li>
-                <li><a href="<?= $basePath ?>/auth/logout">Logout</a></li>
+                <li><a href="<?= $basePath ?>/komentar_rating">Komentar & Rating</a></li> <?php if (Session::has('user')): ?>
+                    <li><a href="<?= $basePath ?>/profile">Profile (<?= escape_html(Session::get('user')['fullname'] ?? Session::get('user')['username']) ?>)</a></li>
+                    <li><a href="<?= $basePath ?>/auth/logout">Logout</a></li>
+                <?php else: ?>
+                    <li><a href="<?= $basePath ?>/auth/login">Login</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
     </header>

@@ -59,12 +59,12 @@ function renderArticleComments($entries, $basePath, $article_id, $currentUser, $
             */
 
             // Reply button
-            echo '<button class="btn-reply" data-comment-id="' . escape_html($entry['id']) . '" data-comment-user="' . escape_html($entry['commenter_username']) . '">Balas</button>';
+            echo '<button class="btn-edit-global" data-comment-id="' . escape_html($entry['id']) . '" data-comment-user="' . escape_html($entry['commenter_username']) . '">Balas</button>';
 
 
             // Delete entry button (for author or admin or article author)
             if (isset($currentUser) && ($currentUser['id'] == $entry['user_id'] || $currentUser['id'] == $article['user_id'] || $currentUser['is_admin'] == 1)) {
-                echo '<a href="' . $basePath . '/comment/delete/' . escape_html($entry['id']) . '" onclick="return confirm(\'Yakin ingin menghapus komentar ini?\')" class="btn-delete-comment">Hapus</a>';
+                echo '<a href="' . $basePath . '/comment/delete/' . escape_html($entry['id']) . '" onclick="return confirm(\'Yakin ingin menghapus komentar ini?\')" class="btn-delete">Hapus</a>';
             }
             echo '</div>'; // .comment-actions
 
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="comment-actions">
                 <button class="btn-reply" data-comment-id="${escapeHTML(comment.id)}" data-comment-user="${escapeHTML(comment.commenter_username)}">Balas</button>
                 ${(currentUserId == comment.user_id || currentUserId == articleAuthorId || currentUserIsAdmin == 1) ?
-                    `<a href="${basePath}/comment/delete/${escapeHTML(comment.id)}" onclick="return confirm('Yakin ingin menghapus komentar ini?')" class="btn-delete-comment">Hapus</a>` : ''
+                    `<a href="${basePath}/comment/delete/${escapeHTML(comment.id)}" onclick="return confirm('Yakin ingin menghapus komentar ini?')" class="btn-delete">Hapus</a>` : ''
                 }
             </div>
         `;

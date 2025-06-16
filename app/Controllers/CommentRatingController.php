@@ -96,10 +96,14 @@ class CommentRatingController {
         $message = null;
         $messageType = null;
 
+        // AJAX requests are now handled by addCommentAjax and toggleCommentLikeAjax
+        // Regular POST requests for toggle_like (item like) are handled here
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $action = $_POST['action'] ?? '';
 
             if ($action === 'submit_comment_review') {
+                // This block is now primarily for non-AJAX fallback or direct form submission that refreshes.
+                // For a full AJAX implementation, this logic would largely move to addCommentAjax.
                 $commentText = trim($_POST['comment_text'] ?? '');
                 $ratingValue = filter_var($_POST['rating_value'] ?? null, FILTER_VALIDATE_INT);
                 $userId = Session::get('user')['id'];
@@ -145,6 +149,7 @@ class CommentRatingController {
                 exit();
 
             } elseif ($action === 'toggle_like') {
+                // This is for liking the FILM/SERIES itself, not comments.
                 if ($itemType === 'film') {
                     $this->filmModel->toggleLike($currentUserId, $itemId);
                 } elseif ($itemType === 'series') {
@@ -152,18 +157,8 @@ class CommentRatingController {
                 }
                 redirect('/komentar_rating/detail/' . $itemType . '/' . $itemId);
                 exit();
-            } elseif ($action === 'toggle_comment_like') {
-                $commentId = filter_var($_POST['comment_id'] ?? null, FILTER_VALIDATE_INT);
-                if ($commentId) {
-                    if ($this->commentRatingModel->toggleLike($currentUserId, $commentId)) {
-                        // Success, no specific message needed, just refresh
-                    } else {
-                        // Error toggling like, handle as needed
-                    }
-                }
-                redirect('/komentar_rating/detail/' . $itemType . '/' . $itemId);
-                exit();
             }
+            // Removed toggle_comment_like from here as it will be handled by toggleCommentLikeAjax
         }
 
         $allEntries = $this->commentRatingModel->getAllEntriesByItem($itemId, $itemType);
@@ -259,6 +254,7 @@ class CommentRatingController {
                 $commenterUser = $userModel->findById($newComment['user_id']);
                 $newComment['commenter_photo'] = $commenterUser['foto_pengguna'] ?? 'default.png';
                 $newComment['commenter_username'] = $commenterUser['username'];
+                $newComment['total_likes'] = 0; // New comments have 0 likes initially
 
                 echo json_encode([
                     'success' => true,
@@ -274,6 +270,49 @@ class CommentRatingController {
             }
         } else {
             echo json_encode(['success' => false, 'message' => 'Gagal menambahkan komentar.']);
+        }
+        exit();
+    }
+
+    /**
+     * Endpoint AJAX untuk toggle like pada komentar/rating.
+     */
+    public function toggleCommentLikeAjax() { // NEW METHOD
+        header('Content-Type: application/json');
+
+        if (!Session::has('user')) {
+            echo json_encode(['success' => false, 'message' => 'Anda harus login untuk menyukai komentar.', 'redirect' => BASE_URL . '/auth/login']);
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Metode request tidak valid.']);
+            exit();
+        }
+
+        $commentId = filter_var($_POST['comment_id'] ?? null, FILTER_VALIDATE_INT);
+        $userId = Session::get('user')['id'];
+
+        if (!$commentId) {
+            echo json_encode(['success' => false, 'message' => 'ID komentar tidak valid.']);
+            exit();
+        }
+
+        $success = $this->commentRatingModel->toggleLike($userId, $commentId);
+
+        if ($success) {
+            $isLikedByUser = $this->commentRatingModel->hasUserLiked($userId, $commentId);
+            $commentDetails = $this->commentRatingModel->findById($commentId); // Get updated total likes
+            $totalLikes = $commentDetails['total_likes'] ?? 0;
+
+            echo json_encode([
+                'success' => true,
+                'is_liked' => $isLikedByUser,
+                'total_likes' => $totalLikes,
+                'message' => $isLikedByUser ? 'Komentar disukai.' : 'Komentar tidak disukai.'
+            ]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Gagal memperbarui status like komentar.']);
         }
         exit();
     }

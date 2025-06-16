@@ -1,0 +1,963 @@
+body {
+    background: url('https://www.notebookcheck.net/fileadmin/Notebooks/News/_nc3/netflixteaser.png') no-repeat center center fixed;
+    background-size: cover;
+    animation: backgroundMove 10s ease-in-out infinite;
+}
+
+.review-container,
+.form-container {
+    max-width: 900px;
+    margin: 80px auto;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+.review-container h2,
+.form-container h1 {
+    color: #ffcc00;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Tombol tambah review mirip btn-create-article */
+.review-container .add-review-link {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 20px auto;
+    padding: 10px 20px;
+    background: #ffcc00;
+    color: black;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.review-container .add-review-link:hover {
+    background: #e6b800;
+}
+
+.review-item {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.user-photo-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.review-content {
+    flex-grow: 1;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.review-meta {
+    font-size: 14px;
+    color: #ccc;
+}
+
+.review-text {
+    margin: 8px 0;
+    font-size: 15px;
+}
+
+.review-actions a {
+    color: #ffcc00;
+    text-decoration: none;
+}
+.review-actions a:hover {
+    text-decoration: underline;
+}
+
+/* Tombol kembali di show.php */
+.btn-back {
+    display: inline-block;
+    background-color: #ffcc00;
+    color: black;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #e6b800;
+}
+
+/* List review */
+.review-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Item review */
+.review-container li {
+    background: #222;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    white-space: pre-wrap;
+}
+
+.review-container li:hover {
+    transform: translateY(-5px);
+}
+
+/* Nama reviewer */
+.review-container li strong {
+    color: #ffcc00;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Link dalam review */
+.review-container li a {
+    color: #ffcc00;
+    text-decoration: none;
+}
+
+.review-container li a:hover {
+    text-decoration: underline;
+}
+
+/* Pesan jika tidak ada review */
+.review-container p {
+    text-align: center;
+    margin-top: 30px;
+    font-style: italic;
+    color: #ccc;
+}
+
+/* Styling form */
+.review-container form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #ffcc00;
+}
+
+.review-container form select,
+.review-container form textarea,
+.review-container form input[type="text"],
+.review-container form input[type="submit"],
+.review-container form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1em;
+    font-family: inherit;
+}
+
+.review-container form textarea {
+    resize: vertical;
+}
+
+.review-container form button {
+    background-color: #ffcc00;
+    color: black;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.review-container form button:hover {
+    background-color: #e6b800;
+}
+
+/* Add to public/assets/css/review.css or a new specific CSS file */
+
+.btn-like {
+    background-color: #ff0000; /* Red for like button */
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-flex; /* To align icon and text */
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
+}
+
+.btn-like:hover {
+    background-color: #cc0000;
+}
+
+.btn-like i {
+    font-size: 1.2em; /* Adjust icon size */
+}
+
+.item-list-section h2 {
+    color: #ffcc00;
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+}
+
+.film-item, .series-item {
+    /* Styles for individual items in the grid, can be similar to article-item */
+    background: #222;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+    transition: transform 0.3s ease;
+}
+
+.film-item h2, .series-item h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.film-item h2 a, .series-item h2 a {
+    color: #ffcc00;
+    text-decoration: none;
+    font-size: 1.5em;
+}
+
+.film-thumbnail, .series-thumbnail {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.film-meta, .series-meta {
+    font-size: 0.9em;
+    color: #bbb;
+    margin-bottom: 5px;
+}
+
+.comment-rating {
+    font-size: 0.9em;
+    color: #ffcc00;
+    margin-left: auto; /* Push rating to the right */
+}
+
+/* Add this to public/assets/css/review.css */
+
+.star-rating {
+    display: inline-block;
+    font-size: 0; /* Hide default radio button text */
+    direction: rtl; /* Make stars appear from right to left */
+    margin-bottom: 15px; /* Add some space below stars */
+}
+
+.star-rating input {
+    display: none; /* Hide actual radio buttons */
+}
+
+.star-rating label {
+    font-size: 30px; /* Size of the stars */
+    color: #ccc; /* Default star color (grey) */
+    cursor: pointer;
+    padding: 0 2px;
+    transition: color 0.2s ease-in-out;
+}
+
+/* Style for hovered stars */
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #ffcc00; /* Yellow on hover */
+}
+
+/* Style for selected stars */
+.star-rating input:checked ~ label {
+    color: #ffcc00; /* Yellow when selected */
+}
+
+/* To display rating text next to stars, if desired */
+.star-rating label:before {
+    content: attr(title); /* Show title as content */
+    display: none; /* Hide by default, can be shown on hover if needed */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .review-container,
+    .article-detail-container,
+    .articles-container,
+    .form-container {
+        padding: 20px;
+        margin: 15px auto;
+    }
+
+    .review-container h2,
+    .article-detail-container h1,
+    .articles-container h1,
+    .form-container h1 {
+        font-size: 1.8em;
+    }
+
+    .review-container li {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .review-container,
+    .article-detail-container,
+    .articles-container,
+    .form-container {
+        padding: 15px;
+        margin: 10px auto;
+    }
+
+    .review-container h2,
+    .article-detail-container h1,
+    .articles-container h1,
+    .form-container h1 {
+        font-size: 1.5em;
+    }
+
+    .review-container li {
+        padding: 12px;
+    }
+}
+
+/* niflix_project/public/assets/css/style.css */
+
+/* --- General Layout & Containers (Keep these from previous responses) --- */
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #141414;
+    color: #e5e5e5;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+main {
+    padding: 30px 0;
+}
+
+.articles-container, /* For list pages (daftar_film.php) */
+.article-detail-container { /* For detail pages (komentar_rating/detail.php) */
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+}
+
+/* --- Notification Messages --- */
+.notification {
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.notification.success {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+.notification.error {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+.notification.info {
+    background-color: #007bff; /* Blue */
+    color: white;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Back Button --- */
+.btn.btn-back {
+    display: inline-block;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-bottom: 30px;
+    transition: background-color 0.3s ease;
+    font-size: 1em;
+}
+
+.btn.btn-back:hover {
+    background-color: #555;
+}
+
+/* --- Single Article (Item Details) --- */
+.single-article {
+    display: flex;
+    flex-direction: row; /* Default to row on larger screens */
+    gap: 30px;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #333; /* Separator from comments section */
+    align-items: flex-start; /* Align items to the top */
+}
+
+.item-image-container {
+    flex-shrink: 0; /* Prevent image container from shrinking */
+    width: 300px; /* Fixed width for the image container */
+    max-width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    background-color: #000; /* Fallback background */
+}
+
+.item-image {
+    width: 100%;
+    height: 450px; /* Fixed height for image to maintain aspect ratio */
+    object-fit: cover; /* Crop image to fit */
+    display: block; /* Remove extra space below image */
+}
+
+.item-details-content {
+    flex-grow: 1; /* Allow content to take remaining space */
+}
+
+.item-details-content h1 {
+    font-size: 2.8em;
+    color: #ffffff;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.item-meta {
+    font-size: 1.1em;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.item-meta strong {
+    color: #e5e5e5;
+}
+
+.item-description {
+    font-size: 1.15em;
+    color: #e5e5e5;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    line-height: 1.7;
+}
+
+.item-actions-bottom {
+    margin-top: 20px;
+}
+
+.btn.btn-like {
+    background-color: #e50914; /* Netflix Red */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn.btn-like:hover {
+    background-color: #ff0000;
+    transform: translateY(-2px);
+}
+
+.btn.btn-like i {
+    font-size: 1.5em; /* Larger icon */
+}
+
+/* --- Comments Section --- */
+.comments-section h2 {
+    font-size: 2.5em;
+    color: #ffffff;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* --- Comment Form --- */
+.comment-form {
+    background-color: #222;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.comment-form h3 {
+    font-size: 1.8em;
+    color: #e5e5e5;
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.comment-form .login-prompt {
+    text-align: center;
+    font-size: 1.1em;
+    color: #ccc;
+}
+
+.comment-form .login-prompt a {
+    color: #e50914;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.comment-form .login-prompt a:hover {
+    text-decoration: underline;
+}
+
+.comment-form .input-group {
+    margin-bottom: 20px;
+}
+
+.comment-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1em;
+    color: #e5e5e5;
+    font-weight: bold;
+}
+
+.comment-form input[type="number"],
+.comment-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #333;
+    color: #e5e5e5;
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.comment-form textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 100px;
+}
+
+.comment-form input[type="number"]:focus,
+.comment-form textarea:focus {
+    border-color: #e50914;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.3);
+}
+
+.comment-form .btn {
+    background-color: #e50914;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-right: 10px;
+}
+
+.comment-form .btn:hover {
+    background-color: #ff0000;
+    transform: translateY(-2px);
+}
+
+.comment-form .btn-cancel {
+    background-color: #555;
+}
+
+.comment-form .btn-cancel:hover {
+    background-color: #777;
+}
+
+
+/* --- Comments List Container --- */
+.comments-list-container {
+    background-color: #222;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#no-comments-reviews-message {
+    text-align: center;
+    color: #aaa;
+    font-style: italic;
+    padding: 20px;
+    font-size: 1.1em;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.comment-item {
+    background-color: #2b2b2b;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    position: relative; /* For replies */
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.commenter-photo-thumb {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e50914; /* Netflix red border */
+    flex-shrink: 0;
+}
+
+.comment-author {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #e5e5e5;
+    margin: 0;
+    flex-grow: 1; /* Allow author to take space */
+}
+
+.comment-rating {
+    font-size: 1em;
+    color: #ffd700; /* Gold for rating */
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+.comment-rating strong {
+    color: #fff;
+    margin-left: 5px;
+}
+
+.comment-date {
+    font-size: 0.9em;
+    color: #888;
+    margin: 0;
+    margin-left: auto; /* Push date to the right */
+    white-space: nowrap; /* Prevent date from wrapping */
+}
+
+.comment-likes {
+    font-size: 1em;
+    color: #e5e5e5;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto; /* Push likes to the right, next to date */
+    white-space: nowrap;
+}
+.comment-likes i {
+    color: #e50914; /* Red heart icon */
+    font-size: 1.2em;
+}
+
+.comment-text {
+    font-size: 1em;
+    color: #ccc;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    white-space: pre-wrap; /* Preserve line breaks from nl2br */
+}
+
+.comment-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    border-top: 1px solid #333;
+    padding-top: 10px;
+    justify-content: flex-end; /* Push action buttons to the right */
+}
+
+.btn-like-comment {
+    background: none;
+    border: none;
+    color: #e5e5e5;
+    cursor: pointer;
+    font-size: 1.1em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-like-comment i {
+    font-size: 1.3em;
+    color: #e50914; /* Red heart icon */
+}
+
+.btn-like-comment:hover {
+    background-color: #3a3a3a;
+    color: #fff;
+}
+
+.btn-reply,
+.btn-delete-comment {
+    background-color: #555;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    text-decoration: none; /* For delete link */
+    transition: background-color 0.3s ease;
+}
+
+.btn-reply:hover {
+    background-color: #6a6a6a;
+}
+
+.btn-delete-comment {
+    background-color: #dc3545; /* Red for delete */
+}
+
+.btn-delete-comment:hover {
+    background-color: #c82333;
+}
+
+
+/* --- Comment Replies --- */
+.comment-replies {
+    border-left: 3px solid #e50914; /* Netflix red line */
+    padding-left: 20px;
+    margin-top: 20px;
+}
+
+.comment-replies .comment-item {
+    margin-top: 15px; /* Space between replies */
+    background-color: #333; /* Slightly darker for nested comments */
+    box-shadow: none; /* Remove redundant shadow */
+    border: none; /* Remove border */
+}
+
+.comment-replies .comment-item .comment-header {
+    margin-bottom: 10px;
+}
+
+.comment-replies .comment-item .comment-text {
+    font-size: 0.95em;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) {
+    .single-article {
+        flex-direction: column; /* Stack on smaller screens */
+        align-items: center;
+    }
+
+    .item-image-container {
+        width: 80%; /* Make image container take more width */
+        margin-bottom: 25px;
+    }
+
+    .item-image {
+        height: auto; /* Adjust height automatically */
+        max-height: 400px;
+    }
+
+    .item-details-content {
+        text-align: center; /* Center text for details */
+    }
+
+    .item-actions-bottom {
+        display: flex;
+        justify-content: center; /* Center like button */
+    }
+}
+
+@media (max-width: 768px) {
+    .article-detail-container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+
+    .btn.btn-back {
+        font-size: 0.9em;
+        padding: 8px 15px;
+        margin-bottom: 20px;
+    }
+
+    .item-details-content h1 {
+        font-size: 2.2em;
+    }
+
+    .item-description, .item-meta {
+        font-size: 1em;
+    }
+
+    .comments-section h2 {
+        font-size: 2em;
+        margin-bottom: 25px;
+    }
+
+    .comment-form {
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .comment-form h3 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .comment-form .btn {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+
+    .comments-list-container {
+        padding: 20px;
+    }
+
+    .comment-item {
+        padding: 15px;
+    }
+
+    .comment-header {
+        flex-direction: column; /* Stack header items vertically */
+        align-items: flex-start; /* Align to left */
+        gap: 5px;
+    }
+    .comment-header .comment-author {
+        order: -2; /* Move author to top */
+        width: 100%;
+    }
+    .comment-header .comment-rating {
+        order: -1; /* Move rating below author */
+        width: 100%;
+    }
+    .comment-header .comment-likes {
+        margin-left: 0; /* Remove auto margin */
+        width: 100%;
+    }
+    .comment-header .comment-date {
+        margin-left: 0; /* Remove auto margin */
+        width: 100%;
+        text-align: right; /* Keep date to the right */
+    }
+}
+
+@media (max-width: 480px) {
+    .articles-container,
+    .article-detail-container {
+        padding: 15px;
+        margin: 15px auto;
+        border-radius: 5px;
+    }
+
+    .single-article {
+        gap: 20px;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+
+    .item-image-container {
+        width: 95%;
+    }
+
+    .item-image {
+        max-height: 350px;
+    }
+
+    .item-details-content h1 {
+        font-size: 1.8em;
+    }
+
+    .item-description, .item-meta {
+        font-size: 0.95em;
+    }
+
+    .comments-section h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .comment-form {
+        padding: 15px;
+    }
+
+    .comment-form h3 {
+        font-size: 1.3em;
+    }
+
+    .comment-form .btn {
+        padding: 8px 15px;
+        font-size: 0.95em;
+    }
+
+    .comment-item {
+        padding: 10px;
+    }
+
+    .commenter-photo-thumb {
+        width: 40px;
+        height: 40px;
+    }
+
+    .comment-author {
+        font-size: 1em;
+    }
+
+    .comment-rating, .comment-likes, .comment-date, .comment-text {
+        font-size: 0.9em;
+    }
+
+    .comment-replies {
+        padding-left: 15px;
+    }
+}

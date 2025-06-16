@@ -259,7 +259,7 @@ main {
     }
 }
 
-@media (max-width: 425px) {
+@media (max-width: 426px) {
     .profile-container {
         padding: 10px;
     }

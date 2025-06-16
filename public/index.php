@@ -86,6 +86,10 @@ if (!empty($uriSegments[0])) {
                     $actionName = 'addCommentAjax';
                     array_shift($uriSegments);
                     $routeHandled = true;
+                } elseif (!empty($uriSegments[0]) && $uriSegments[0] === 'toggleCommentLikeAjax') { // NEW AJAX ROUTE FOR COMMENT LIKES
+                    $actionName = 'toggleCommentLikeAjax';
+                    array_shift($uriSegments);
+                    $routeHandled = true;
                 } else {
                     header("HTTP/1.0 404 Not Found");
                     echo "<h1>404 Not Found</h1><p>URL komentar tidak valid.</p>";

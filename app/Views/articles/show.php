@@ -1,11 +1,7 @@
 <?php
 // niflix_project/app/Views/articles/show.php
-// $article, $comments, $title, $message, $message_type akan tersedia dari ArticleController
-
-// Memuat header
 require_once APP_ROOT . '/app/Views/includes/header.php';
 
-// Pastikan base Path tersedia untuk tautan dan gambar
 $basePath = dirname($_SERVER['SCRIPT_NAME']);
 if ($basePath === '/') {
     $basePath = '';
@@ -13,7 +9,6 @@ if ($basePath === '/') {
     $basePath = rtrim($basePath, '/');
 }
 
-// Path lengkap ke foto profil penulis
 $authorPhotoUrl = $basePath . '/uploads/profile_photos/' . escape_html($article['author_photo'] ?? 'default.png');
 // Jika default.png tidak ada di uploads/profile_photos, coba di assets/img
 if (strpos($authorPhotoUrl, 'default.png') !== false && !file_exists(PUBLIC_PATH . '/uploads/profile_photos/default.png')) {
@@ -24,9 +19,6 @@ if (strpos($authorPhotoUrl, 'default.png') !== false && !file_exists(PUBLIC_PATH
 function renderArticleComments($entries, $basePath, $article_id, $currentUser, $pdo) {
     echo '<div class="comments-list">';
     if (empty($entries)) {
-        // Only show this message if it's the initial call (not a recursive reply call)
-        // A simple check like this might suffice, or pass a flag.
-        // For now, let's keep it simple.
     } else {
         foreach ($entries as $entry) {
             // Check if commenter photo exists or use default
@@ -46,21 +38,6 @@ function renderArticleComments($entries, $basePath, $article_id, $currentUser, $
             echo '<p class="comment-text">' . nl2br(escape_html($entry['comment_text'])) . '</p>';
 
             echo '<div class="comment-actions">';
-            // Like/Unlike comment button - currently not implemented for article comments, but can be added
-            // if you expand CommentRating model's toggleLike to handle item_type 'article'
-            /*
-            echo '<form action="' . $basePath . '/comment/toggleLikeAjax" method="POST" style="display:inline-block;">';
-            echo '<input type="hidden" name="comment_id" value="' . escape_html($entry['id']) . '">';
-            echo '<input type="hidden" name="item_type" value="article">';
-            echo '<button type="submit" class="btn-like-comment ' . ($isCommentLiked ? 'liked' : '') . '">';
-            echo '<i class="bx ' . ($isCommentLiked ? 'bxs-heart' : 'bx-heart') . '"></i>';
-            echo '</button>';
-            echo '</form>';
-            */
-
-            // Reply button
-            echo '<button class="btn-edit-global" data-comment-id="' . escape_html($entry['id']) . '" data-comment-user="' . escape_html($entry['commenter_username']) . '">Balas</button>';
-
 
             // Delete entry button (for author or admin or article author)
             if (isset($currentUser) && ($currentUser['id'] == $entry['user_id'] || $currentUser['id'] == $article['user_id'] || $currentUser['is_admin'] == 1)) {
@@ -131,7 +108,6 @@ function renderArticleComments($entries, $basePath, $article_id, $currentUser, $
 
                             <textarea name="comment_text" id="comment_text_article" placeholder="Tulis komentar Anda di sini..." rows="5" required></textarea>
                             <button type="submit" class="btn">Kirim Komentar</button>
-                            <button type="button" id="cancel-reply-article" class="btn btn-cancel" style="display:none;">Batal Balasan</button>
                         </form>
                     </div>
                 <?php endif; ?>
@@ -194,11 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const commentUser = replyButton.dataset.commentUser;
 
             parentCommentIdInputArticle.value = commentId;
-            // Jika Anda tidak memiliki label terpisah, Anda mungkin ingin memodifikasi placeholder saja
-            // atau menambahkan elemen span untuk label balasan.
-            // Saat ini, Anda memiliki `commentLabelArticle` yang tidak ada di HTML.
-            // Mari kita asumsikan Anda ingin memodifikasi placeholder untuk kesederhanaan.
-            // Atau, tambahkan <span id="comment-label-article"></span> di HTML Anda jika ingin label terpisah.
             commentTextInputArticle.placeholder = `Tulis balasan untuk @${commentUser} di sini...`;
             commentTextInputArticle.focus();
             cancelReplyArticleButton.style.display = 'inline-block';
@@ -214,10 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const basePath = BASE_URL;
 
         const commenterPhotoUrl = `${basePath}/uploads/profile_photos/${comment.commenter_photo || 'default.png'}`;
-        // Jika default.png tidak ada di uploads/profile_photos, coba di assets/img
-        // Ini perlu dilakukan di sisi PHP atau pastikan JS memiliki logika fallback yang benar
-        // Untuk saat ini, kita asumsikan path default.png konsisten atau difallback di PHP.
-        // Asumsi BASE_URL sudah didefinisikan dari PHP.
 
         commentItem.innerHTML = `
             <div class="comment-header">
@@ -292,10 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 repliesContainer.appendChild(newCommentElement);
                             }
                         } else {
-                            // Append as a top-level comment
-                            // Find the correct place to prepend to maintain order (most recent at top, if desired)
-                            // Or, if comments are rendered oldest first, append.
-                            // Currently, renderArticleComments orders by created_at ASC, so new comments should be appended
                             commentsListContainer.appendChild(newCommentElement);
                             if (noCommentsMessage) {
                                 noCommentsMessage.style.display = 'none'; // Hide "No comments" message

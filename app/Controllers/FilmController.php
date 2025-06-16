@@ -37,7 +37,7 @@ class FilmController {
         // Ambil film populer (ID 1-8)
         $popularFilm = $this->filmModel->getPopularFilm(); // Teruskan userId
         // Ambil semua film
-        $allFilm = $this->filmModel->getAllFilm($currentUserId); // Teruskan userId
+        $allFilm = $this->filmModel->getAllFilms($currentUserId); // Teruskan userId
 
         // Tangani pesan dari parameter URL
         $message = $_GET['message'] ?? null;

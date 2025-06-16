@@ -111,7 +111,7 @@ class FilmController {
         ]);
     }
 
-        /**
+    /**
      * Menampilkan formulir untuk membuat film baru atau memproses submission.
      */
     public function create() {
@@ -139,27 +139,45 @@ class FilmController {
             $is_popular = ($is_popular === 1) ? 1 : 0;
             $creatorId = Session::get('user')['id']; // AMBIL ID PENGGUNA DARI SESI
 
-            if (empty($title) || empty($description) || empty($releaseYear)) {
-                $message = 'Judul, deskripsi, dan tahun rilis tidak boleh kosong.';
-                $messageType = 'error';
-            } elseif ($releaseYear === false || $releaseYear <= 0) {
-                $message = 'Tahun rilis harus berupa angka valid.';
-                $messageType = 'error';
-            } else {
+            // Server-side validation
+            if (empty($title)) {
+                $error['title'] = 'Judul film tidak boleh kosong.';
+            }
+
+            if (empty($description)) {
+                $error['description'] = 'Deskripsi film tidak boleh kosong.';
+            }
+
+            // Validation for release year
+            if ($releaseYear === false || $releaseYear <= 0) {
+                $error['release_year'] = 'Tahun rilis harus berupa angka valid.';
+            } elseif ($releaseYear > date('Y')) { // Check if year is in the future
+                $error['release_year'] = 'Tahun rilis tidak boleh lebih dari tahun sekarang (' . date('Y') . ').';
+            } elseif ($releaseYear < 1888) { // Optional: minimum year
+                $error['release_year'] = 'Tahun rilis terlalu lama.';
+            }
+
+            if (!empty($imageUrl) && !filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+                $error['image_url'] = 'Format URL gambar tidak valid.';
+            }
+
+            if (empty($error)) {
                 // Pass the converted integer value for is_popular and creatorId
                 if ($this->filmModel->create($title, $description, $releaseYear, $imageUrl, $is_popular, $creatorId)) {
-                    $message = 'Film berhasil ditambahkan!';
+                    $message = 'film berhasil ditambahkan!';
                     $messageType = 'success';
-                    redirect('/daftar_film?message=' . urlencode($message) . '&type=' . urlencode($messageType));
+                    redirect('/daftar_film?message=' . urlencode($message) . '&type=' . urlencode($messageType)); //
                     exit();
                 } else {
                     $message = 'Gagal menambahkan film.';
                     $messageType = 'error';
                 }
+            } else {
+                $message = 'Mohon perbaiki kesalahan dalam formulir.';
+                $messageType = 'error';
             }
         }
 
-        
         view('film/create', [
             'title' => 'Tambah Film Baru',
             'message' => $message,
@@ -170,14 +188,15 @@ class FilmController {
                 'release_year' => $releaseYear,
                 'image_url' => $imageUrl,
                 'is_popular' => $is_popular
-            ]
+            ],
+            'error' => $error // Pass the error array to the view
         ]);
     }
 
     /**
      * Endpoint AJAX untuk validasi field (misal: tahun rilis).
      */
-    public function validateFieldAjax() {
+     public function validateFieldAjax() {
         header('Content-Type: application/json');
         $field = $_POST['field'] ?? '';
         $value = $_POST['value'] ?? '';

@@ -26,7 +26,7 @@ class CommentRating {
                 cr.rating_value,
                 u.username AS commenter_username,
                 u.foto_pengguna AS commenter_photo,
-                COALESCE(SUM(CASE WHEN l.item_type = 'comment' AND l.item_id = cr.id THEN 1 ELSE 0 END), 0) AS total_likes
+                COALESCE(COUNT(l.id), 0) AS total_likes -- Use COUNT(l.id) for total likes if l.id is not null
             FROM
                 {$this->table} cr
             JOIN
@@ -177,16 +177,28 @@ class CommentRating {
     }
 
     /**
-     * Finds an entry by ID.
+     * Finds an entry by ID, including the total number of likes for that comment.
      * @param int $id
      * @return array|false
      */
     public function findById($id) {
         $stmt = $this->pdo->prepare("
-            SELECT cr.*, u.username AS commenter_username, u.foto_pengguna AS commenter_photo
-            FROM {$this->table} cr
-            JOIN user u ON cr.user_id = u.id
-            WHERE cr.id = :id
+            SELECT
+                cr.*,
+                u.username AS commenter_username,
+                u.foto_pengguna AS commenter_photo,
+                -- MODIFIED LINE: Calculate total likes for the comment by counting distinct like IDs
+                COALESCE(COUNT(l.id), 0) AS total_likes
+            FROM
+                {$this->table} cr
+            JOIN
+                user u ON cr.user_id = u.id
+            LEFT JOIN
+                likes l ON cr.id = l.item_id AND l.item_type = 'comment'
+            WHERE
+                cr.id = :id
+            GROUP BY
+                cr.id -- Required when using an aggregate function like COUNT()
         ");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();

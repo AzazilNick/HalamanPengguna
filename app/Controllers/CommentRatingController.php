@@ -6,6 +6,7 @@ require_once APP_ROOT . '/app/Core/Functions.php';
 require_once APP_ROOT . '/app/Models/Film.php';
 require_once APP_ROOT . '/app/Models/Series.php';
 require_once APP_ROOT . '/app/Models/CommentRating.php';
+require_once APP_ROOT . '/app/Models/User.php';
 
 class CommentRatingController {
     private $pdo;
@@ -19,12 +20,26 @@ class CommentRatingController {
         $this->seriesModel = new Series($pdo);
         $this->commentRatingModel = new CommentRating($pdo);
 
-        if (!Session::has('user')) {
-            redirect('/auth/login?message=' . urlencode('Anda harus login untuk mengakses halaman Komentar & Rating.') . '&type=error');
+        // Hanya terapkan check login jika bukan AJAX request dan bukan action untuk AJAX like/delete
+        // Ini adalah perubahan penting untuk menghindari redirect otomatis saat AJAX request
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+        $currentAction = debug_backtrace()[1]['function'] ?? ''; // Get the calling function name
+
+        // Periksa apakah action saat ini adalah detail atau deleteEntry (yang mungkin dipanggil dari article controller untuk delete)
+        // atau toggleLike, yang sudah menangani redirect sendiri jika tidak login
+        if (!$isAjax && !in_array($currentAction, ['detail', 'deleteEntry', 'toggleLikeAjax'])) {
+             if (!Session::has('user')) {
+                redirect('/auth/login?message=' . urlencode('Anda harus login untuk mengakses halaman Komentar & Rating.') . '&type=error');
+            }
         }
     }
 
     public function index() {
+        // Pastikan pengguna sudah login
+        if (!Session::has('user')) {
+            redirect('/auth/login');
+        }
+
         $films = $this->filmModel->getAllFilms();
         $series = $this->seriesModel->getAllSeries();
 
@@ -40,27 +55,34 @@ class CommentRatingController {
         ]);
     }
 
+    /**
+     * Menampilkan detail item tunggal dan komentar-komentarnya, atau memproses submission.
+     * @param string $itemType Tipe item ('film', 'series')
+     * @param int $itemId ID item
+     */
     public function detail($itemType, $itemId) {
+        if (!Session::has('user')) {
+            redirect('/auth/login');
+        }
+
         $item = null;
-        $allEntries = []; // Akan menampung komentar dan rating
-        $userReviewEntry = null; // Akan menampung ulasan (rating + komentar) dari user yang sedang login
+        $allEntries = [];
+        $userReviewEntry = null;
         $isLiked = false;
         $currentUserId = Session::get('user')['id'];
 
         if ($itemType === 'film') {
             $item = $this->filmModel->findById($itemId);
             if ($item) {
-                // Mengambil semua komentar dan rating sekaligus
                 $allEntries = $this->commentRatingModel->getAllEntriesByItem($itemId, 'film');
-                $userReviewEntry = $this->commentRatingModel->findUserRating($currentUserId, $itemId, 'film'); // Untuk form ulasan pengguna
+                $userReviewEntry = $this->commentRatingModel->findUserRating($currentUserId, $itemId, 'film');
                 $isLiked = $this->filmModel->hasUserLiked($currentUserId, $itemId);
             }
         } elseif ($itemType === 'series') {
             $item = $this->seriesModel->findById($itemId);
             if ($item) {
-                // Mengambil semua komentar dan rating sekaligus
                 $allEntries = $this->commentRatingModel->getAllEntriesByItem($itemId, 'series');
-                $userReviewEntry = $this->commentRatingModel->findUserRating($currentUserId, $itemId, 'series'); // Untuk form ulasan pengguna
+                $userReviewEntry = $this->commentRatingModel->findUserRating($currentUserId, $itemId, 'series');
                 $isLiked = $this->seriesModel->hasUserLiked($currentUserId, $itemId);
             }
         } else {
@@ -77,13 +99,12 @@ class CommentRatingController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $action = $_POST['action'] ?? '';
 
-            if ($action === 'submit_comment_review') { // Handle submission of combined comment/review
+            if ($action === 'submit_comment_review') {
                 $commentText = trim($_POST['comment_text'] ?? '');
                 $ratingValue = filter_var($_POST['rating_value'] ?? null, FILTER_VALIDATE_INT);
                 $userId = Session::get('user')['id'];
                 $parentCommentId = filter_var($_POST['parent_comment_id'] ?? null, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
 
-                // Validasi input
                 if (empty($commentText) && ($ratingValue === false || $ratingValue < 1 || $ratingValue > 10)) {
                     $message = 'Komentar atau rating harus diisi, dan rating harus antara 1-10!';
                     $messageType = 'error';
@@ -91,8 +112,6 @@ class CommentRatingController {
                      $message = 'Rating harus antara 1-10!';
                      $messageType = 'error';
                 } else {
-                    // Cek apakah ini update rating atau penambahan baru
-                    // Jika ada ratingValue dan ini bukan balasan komentar, cari rating yang sudah ada dari user ini.
                     if ($ratingValue !== null && $parentCommentId === null) {
                          $existingUserRating = $this->commentRatingModel->findUserRating($userId, $itemId, $itemType);
                         if ($existingUserRating) {
@@ -104,7 +123,6 @@ class CommentRatingController {
                                 $messageType = 'error';
                             }
                         } else {
-                            // Ini adalah ulasan baru (rating + komentar)
                             if ($this->commentRatingModel->addEntry($itemId, $itemType, $userId, $commentText, null, $ratingValue)) {
                                 $message = 'Ulasan dan rating berhasil ditambahkan!';
                                 $messageType = 'success';
@@ -114,7 +132,6 @@ class CommentRatingController {
                             }
                         }
                     } else {
-                        // Ini adalah komentar biasa (bisa jadi balasan)
                         if ($this->commentRatingModel->addEntry($itemId, $itemType, $userId, $commentText, $parentCommentId, null)) {
                             $message = 'Komentar berhasil ditambahkan.';
                             $messageType = 'success';
@@ -149,9 +166,8 @@ class CommentRatingController {
             }
         }
 
-        // Re-fetch all entries after potential submission to display the new ones
         $allEntries = $this->commentRatingModel->getAllEntriesByItem($itemId, $itemType);
-        $userReviewEntry = $this->commentRatingModel->findUserRating($currentUserId, $itemId, $itemType); // Re-fetch user's review/rating
+        $userReviewEntry = $this->commentRatingModel->findUserRating($currentUserId, $itemId, $itemType);
 
         if (isset($_GET['message'])) {
             $message = $_GET['message'];
@@ -162,14 +178,104 @@ class CommentRatingController {
         view('komentar_rating/detail', [
             'item' => $item,
             'item_type' => $itemType,
-            'allEntries' => $allEntries, // Mengirim semua entri
+            'allEntries' => $allEntries,
             'title' => $item['title'],
             'message' => $message,
             'message_type' => $messageType,
-            'userReviewEntry' => $userReviewEntry, // Ulasan (rating+komentar) user yang sedang login
+            'userReviewEntry' => $userReviewEntry,
             'isLiked' => $isLiked,
-            'pdo' => $this->pdo // Kirim objek PDO agar bisa digunakan di view (jika perlu)
+            'pdo' => $this->pdo
         ]);
+    }
+
+    /**
+     * Menambahkan komentar/ulasan baru melalui AJAX.
+     * Digunakan oleh ArticleController dan KomentarRatingController.
+     */
+    public function addCommentAjax() {
+        header('Content-Type: application/json');
+
+        if (!Session::has('user')) {
+            echo json_encode(['success' => false, 'message' => 'Anda harus login untuk menambahkan komentar.', 'redirect' => BASE_URL . '/auth/login']);
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Metode request tidak valid.']);
+            exit();
+        }
+
+        $itemId = filter_var($_POST['item_id'] ?? null, FILTER_VALIDATE_INT);
+        $itemType = $_POST['item_type'] ?? '';
+        $commentText = trim($_POST['comment_text'] ?? '');
+        $ratingValue = filter_var($_POST['rating_value'] ?? null, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
+        $parentCommentId = filter_var($_POST['parent_comment_id'] ?? null, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
+        $userId = Session::get('user')['id'];
+
+        if (empty($itemId) || empty($itemType) || (empty($commentText) && $ratingValue === null)) {
+            echo json_encode(['success' => false, 'message' => 'Data komentar tidak lengkap.']);
+            exit();
+        }
+
+        // Validate item_type (ensure it's one of 'film', 'series', 'article')
+        $allowedItemTypes = ['film', 'series', 'article'];
+        if (!in_array($itemType, $allowedItemTypes)) {
+            echo json_encode(['success' => false, 'message' => 'Tipe item tidak valid.']);
+            exit();
+        }
+
+        // Check if a review (rating + optional comment) already exists for this user and item.
+        // This logic applies only for top-level entries (parent_comment_id is null)
+        if ($ratingValue !== null && $parentCommentId === null) {
+            $existingReview = $this->commentRatingModel->findUserRating($userId, $itemId, $itemType);
+            if ($existingReview) {
+                // Update existing review
+                if ($this->commentRatingModel->updateEntry($existingReview['id'], $commentText, $ratingValue)) {
+                    $updatedComment = $this->commentRatingModel->findById($existingReview['id']);
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Ulasan berhasil diperbarui.',
+                        'comment' => $updatedComment, // Return updated comment data
+                        'action_type' => 'update',
+                        'is_new_review' => false,
+                        'new_total_comments_ratings' => $this->commentRatingModel->getTotalCommentsRatings($itemId, $itemType),
+                        'new_average_rating' => $this->commentRatingModel->getAverageRating($itemId, $itemType)
+                    ]);
+                    exit();
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Gagal memperbarui ulasan.']);
+                    exit();
+                }
+            }
+        }
+
+        // Add new comment or review
+        if ($this->commentRatingModel->addEntry($itemId, $itemType, $userId, $commentText, $parentCommentId, $ratingValue)) {
+            $newCommentId = $this->pdo->lastInsertId();
+            $newComment = $this->commentRatingModel->findById($newCommentId);
+            if ($newComment) {
+                 // Fetch user photo for the new comment
+                $userModel = new User($this->pdo); // Instantiate User model
+                $commenterUser = $userModel->findById($newComment['user_id']);
+                $newComment['commenter_photo'] = $commenterUser['foto_pengguna'] ?? 'default.png';
+                $newComment['commenter_username'] = $commenterUser['username'];
+
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Komentar berhasil ditambahkan.',
+                    'comment' => $newComment,
+                    'action_type' => 'add',
+                    'is_new_review' => ($ratingValue !== null),
+                    'new_total_comments_ratings' => $this->commentRatingModel->getTotalCommentsRatings($itemId, $itemType),
+                    'new_average_rating' => $this->commentRatingModel->getAverageRating($itemId, $itemType)
+                ]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Komentar berhasil ditambahkan, tetapi gagal mengambil detailnya.']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Gagal menambahkan komentar.']);
+        }
+        exit();
     }
 
     public function deleteEntry($entryId) {
@@ -184,7 +290,6 @@ class CommentRatingController {
         }
 
         $currentUser = Session::get('user');
-        // Hanya penulis entri, atau admin yang bisa menghapus
         if ($currentUser['id'] != $entry['user_id'] && $currentUser['is_admin'] != 1) {
             redirect('/komentar_rating/detail/' . $entry['item_type'] . '/' . $entry['item_id'] . '?message=' . urlencode('Anda tidak memiliki izin untuk menghapus entri ini.') . '&type=error');
         }
@@ -192,7 +297,6 @@ class CommentRatingController {
         $message = '';
         $messageType = '';
 
-        // Capture item_type and item_id before deletion for redirect
         $redirectItemType = $entry['item_type'];
         $redirectItemId = $entry['item_id'];
 
@@ -204,7 +308,6 @@ class CommentRatingController {
             $messageType = 'error';
         }
 
-        // --- Perubahan di sini: Arahkan ke halaman artikel jika item_type adalah 'article' ---
         if ($redirectItemType === 'article') {
             redirect('/articles/show/' . $redirectItemId . '?message=' . urlencode($message) . '&type=' . urlencode($messageType));
         } else {

@@ -59,31 +59,12 @@ class ArticleController {
         $messageType = null;
 
         // Cek apakah ini permintaan AJAX atau POST reguler
-        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+        // Get comments for the article using the generalized model
+        $comments = $this->commentRatingModel->getAllEntriesByItem($id, 'article');
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isAjax) { // Hanya proses POST reguler di sini
-            $commentText = trim($_POST['comment_text'] ?? '');
-            $userId = Session::get('user')['id'];
-            // Menggunakan FILTER_NULL_ON_FAILURE untuk memastikan $parentCommentId adalah NULL jika tidak valid
-            $parentCommentId = filter_var($_POST['parent_comment_id'] ?? null, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
-
-            if (empty($commentText)) {
-                $message = 'Komentar tidak boleh kosong!';
-                $messageType = 'error';
-            } else {
-                if ($this->commentRatingModel->addEntry($id, 'article', $userId, $commentText, $parentCommentId, null)) {
-                    $message = 'Komentar berhasil ditambahkan.';
-                    $messageType = 'success';
-                } else {
-                    $message = 'Gagal menambahkan komentar.';
-                    $messageType = 'error';
-                }
-            }
-            redirect('/articles/show/' . $id . '?message=' . urlencode($message) . '&type=' . urlencode($messageType));
-            exit();
-        }
-
-        // Ambil pesan dari URL parameter jika ada
+        // Tangani pesan dari parameter URL
+        $message = null;
+        $messageType = null;
         if (isset($_GET['message'])) {
             $message = $_GET['message'];
             $messageType = $_GET['type'] ?? 'info';

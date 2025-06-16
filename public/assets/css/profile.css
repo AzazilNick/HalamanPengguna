@@ -259,7 +259,7 @@ main {
     }
 }
 
-@media (max-width: 320px) {
+@media (max-width: 425px) {
     .profile-container {
         padding: 10px;
     }
@@ -268,5 +268,12 @@ main {
     .input-new-password,
     .btn-update {
         max-width: 100%;
+    }
+
+    .input-row {
+        display: flex;
+        align-items: center;
+        width: 250px;
+        margin-bottom: 15px;
     }
 }

@@ -1,21 +1,23 @@
 <?php
 // niflix_project/app/Controllers/ArticleController.php
 
-//
 require_once APP_ROOT . '/app/Core/Session.php';
 require_once APP_ROOT . '/app/Core/Functions.php';
 require_once APP_ROOT . '/app/Models/Article.php';
 require_once APP_ROOT . '/app/Models/CommentRating.php'; // Renamed model
+require_once APP_ROOT . '/app/Models/User.php'; // Tambahkan ini untuk akses ke model User
 
 class ArticleController {
     private $pdo;
     private $articleModel;
     private $commentRatingModel; // Renamed property
+    private $userModel; // Tambahkan ini
 
     public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
         $this->articleModel = new Article($pdo);
         $this->commentRatingModel = new CommentRating($pdo); // Instantiate renamed model
+        $this->userModel = new User($pdo); // Inisialisasi model User
     }
 
     /**
@@ -50,13 +52,16 @@ class ArticleController {
         }
 
         // Get comments for the article using the generalized model
-        $comments = $this->commentRatingModel->getAllEntriesByItem($id, 'article'); // Only get pure comments
+        $comments = $this->commentRatingModel->getAllEntriesByItem($id, 'article');
 
         // Tangani penambahan komentar jika ada POST request
         $message = null;
         $messageType = null;
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+        // Cek apakah ini permintaan AJAX atau POST reguler
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isAjax) { // Hanya proses POST reguler di sini
             $commentText = trim($_POST['comment_text'] ?? '');
             $userId = Session::get('user')['id'];
             // Menggunakan FILTER_NULL_ON_FAILURE untuk memastikan $parentCommentId adalah NULL jika tidak valid
@@ -66,8 +71,7 @@ class ArticleController {
                 $message = 'Komentar tidak boleh kosong!';
                 $messageType = 'error';
             } else {
-                // Use the generalized addEntry method with item_type 'article'
-                if ($this->commentRatingModel->addEntry($id, 'article', $userId, $commentText, $parentCommentId, null)) { // null for rating_value
+                if ($this->commentRatingModel->addEntry($id, 'article', $userId, $commentText, $parentCommentId, null)) {
                     $message = 'Komentar berhasil ditambahkan.';
                     $messageType = 'success';
                 } else {
@@ -85,13 +89,13 @@ class ArticleController {
             $messageType = $_GET['type'] ?? 'info';
         }
 
-
         view('articles/show', [
             'article' => $article,
             'comments' => $comments,
             'title' => $article['title'],
             'message' => $message,
-            'message_type' => $messageType
+            'message_type' => $messageType,
+            'pdo' => $this->pdo // Kirim objek PDO agar bisa digunakan di view (untuk renderAllEntries)
         ]);
     }
 
@@ -116,7 +120,7 @@ class ArticleController {
                 $message = 'Judul dan konten tidak boleh kosong.';
                 $messageType = 'error';
             } else {
-                try { // Tambahkan blok try-catch di sini
+                try {
                     if ($this->articleModel->create($userId, $title, $content)) {
                         $message = 'Artikel berhasil dipublikasikan!';
                         $messageType = 'success';
@@ -126,8 +130,8 @@ class ArticleController {
                         $message = 'Gagal mempublikasikan artikel.';
                         $messageType = 'error';
                     }
-                } catch (PDOException $e) { // Tangkap PDOException
-                    if ($e->getCode() == '23000') { // Kode SQLSTATE untuk integrity constraint violation
+                } catch (PDOException $e) {
+                    if ($e->getCode() == '23000') {
                         $message = 'Judul artikel sudah ada. Mohon gunakan judul lain.';
                         $messageType = 'error';
                     } else {
@@ -141,7 +145,6 @@ class ArticleController {
             'title' => 'Buat Artikel Baru',
             'message' => $message,
             'message_type' => $messageType,
-            // Pertahankan nilai input yang dikirimkan agar tidak hilang saat ada error
             'article' => [
                 'title' => $_POST['title'] ?? '',
                 'content' => $_POST['content'] ?? ''
@@ -181,7 +184,7 @@ class ArticleController {
                 $message = 'Judul dan konten tidak boleh kosong.';
                 $messageType = 'error';
             } else {
-                try { // Tambahkan blok try-catch di sini
+                try {
                     if ($this->articleModel->update($id, $title, $content)) {
                         $message = 'Artikel berhasil diperbarui!';
                         $messageType = 'success';
@@ -191,8 +194,8 @@ class ArticleController {
                         $message = 'Gagal memperbarui artikel.';
                         $messageType = 'error';
                     }
-                } catch (PDOException $e) { // Tangkap PDOException
-                    if ($e->getCode() == '23000') { // Kode SQLSTATE untuk integrity constraint violation
+                } catch (PDOException $e) {
+                    if ($e->getCode() == '23000') {
                         $message = 'Judul artikel sudah ada. Mohon gunakan judul lain.';
                         $messageType = 'error';
                     } else {
@@ -204,7 +207,7 @@ class ArticleController {
         }
         view('articles/edit', [
             'title' => 'Edit Artikel',
-            'article' => $article, // Pastikan ini tetap ada untuk mengisi form
+            'article' => $article,
             'message' => $message,
             'message_type' => $messageType
         ]);

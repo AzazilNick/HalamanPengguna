@@ -36,9 +36,9 @@ if ($basePath === '/') {
     } elseif (in_array('profile', $pathSegments)) {
         $pageCss = 'profile.css';
     } elseif (in_array('daftar_series', $pathSegments)) {
-        $pageCss = 'series.css';
+        $pageCss = 'daftar_film_series.css';
     } elseif (in_array('daftar_film', $pathSegments)) {
-        $pageCss = 'series.css';
+        $pageCss = 'daftar_film_series.css';
     } elseif (in_array('review_films', $pathSegments)) { // Keep existing
         $pageCss = 'review.css';
     } elseif (in_array('review_series', $pathSegments)) { // Keep existing
@@ -52,6 +52,10 @@ if ($basePath === '/') {
     }
     ?>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <script>
+        const BASE_URL = '<?= $basePath ?>';
+    </script>
 </head>
 <body>
     <header>
@@ -59,10 +63,10 @@ if ($basePath === '/') {
         <nav class="nav-menu">
             <ul>
                 <li><a href="<?= $basePath ?>/dashboard">Dashboard</a></li>
-                <li><a href="<?= $basePath ?>/articles">Artikel</a></li>
                 <?php if (Session::has('user') && Session::get('user')['is_admin'] == 1) : ?>
                     <li><a href="<?= $basePath ?>/admin">Kelola Akun</a></li>
                 <?php endif; ?>
+                <li><a href="<?= $basePath ?>/articles">Artikel</a></li>
                 <li><a href="<?= $basePath ?>/review_films">Review Film</a></li> <li><a href="<?= $basePath ?>/review_series">Review Series</a></li> <li><a href="<?= $basePath ?>/daftar_film">Daftar Film</a></li>
                 <li><a href="<?= $basePath ?>/daftar_series">Daftar Series</a></li>
                 <li><a href="<?= $basePath ?>/komentar_rating">Komentar & Rating</a></li> <?php if (Session::has('user')): ?>

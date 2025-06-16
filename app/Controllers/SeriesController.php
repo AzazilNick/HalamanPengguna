@@ -1,9 +1,9 @@
 <?php
 // niflix_project/app/Controllers/SeriesController.php
 
-require_once APP_ROOT . '/app/Core/Session.php';
-require_once APP_ROOT . '/app/Core/Functions.php';
-require_once APP_ROOT . '/app/Models/Series.php';
+require_once APP_ROOT . '/app/Core/Session.php'; //
+require_once APP_ROOT . '/app/Core/Functions.php'; //
+require_once APP_ROOT . '/app/Models/Series.php'; //
 
 class SeriesController {
     private $pdo;
@@ -18,8 +18,8 @@ class SeriesController {
      * Memastikan hanya admin yang bisa mengakses fungsi tertentu.
      */
     private function checkAdminAccess() {
-        if (!Session::has('user') || Session::get('user')['is_admin'] != 1) {
-            redirect('/dashboard?message=' . urlencode('Anda tidak memiliki izin untuk mengakses halaman ini.') . '&type=error');
+        if (!Session::has('user') || Session::get('user')['is_admin'] != 1) { //
+            redirect('/dashboard?message=' . urlencode('Anda tidak memiliki izin untuk mengakses halaman ini.') . '&type=error'); //
         }
     }
 
@@ -28,16 +28,16 @@ class SeriesController {
      */
     public function index() {
         // Pastikan pengguna sudah login
-        if (!Session::has('user')) {
-            redirect('/auth/login');
+        if (!Session::has('user')) { //
+            redirect('/auth/login'); //
         }
 
         $currentUserId = Session::get('user')['id']; // Ambil ID pengguna yang sedang login
 
         // Ambil series populer (ID 1-8)
-        $popularSeries = $this->seriesModel->getSeriesByIdRange($currentUserId); // Teruskan userId
+        $popularSeries = $this->seriesModel->getSeriesByIdRange();
         // Ambil semua series
-        $allSeries = $this->seriesModel->getAllSeries($currentUserId); // Teruskan userId
+        $allSeries = $this->seriesModel->getAllSeries($currentUserId);
 
         // Tangani pesan dari parameter URL
         $message = $_GET['message'] ?? null;
@@ -69,7 +69,7 @@ class SeriesController {
         }
 
         $seriesId = filter_var($_POST['series_id'] ?? null, FILTER_VALIDATE_INT);
-        $userId = Session::get('user')['id'];
+        $userId = Session::get('user')['id']; //
 
         if (!$seriesId) {
             echo json_encode(['success' => false, 'message' => 'ID series tidak valid.']);
@@ -96,10 +96,15 @@ class SeriesController {
      * @param int $id ID series
      */
     public function show($id) {
+        // Pastikan pengguna sudah login
+        if (!Session::has('user')) {
+            redirect('/auth/login');
+        }
+
         $series = $this->seriesModel->findById($id);
 
         if (!$series) {
-            redirect('/daftar_series?message=' . urlencode('Series tidak ditemukan.') . '&type=error');
+            redirect('/daftar_series?message=' . urlencode('Series tidak ditemukan.') . '&type=error'); //
         }
 
         view('series/show', [
@@ -122,33 +127,57 @@ class SeriesController {
         $imageUrl = $_POST['image_url'] ?? '';
         // Initialize $is_popular with a default value for GET requests
         $is_popular = 0; // Default to not popular (0)
+        $error = []; // Initialize error array
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title = trim($_POST['title'] ?? '');
             $description = trim($_POST['description'] ?? '');
             $releaseYear = filter_var($_POST['release_year'] ?? '', FILTER_VALIDATE_INT);
             $imageUrl = trim($_POST['image_url'] ?? '');
-            $is_popular_str = $_POST['is_popular'] ?? 'NO'; // Re-capture for POST
-            $is_popular = ($is_popular_str === 'YES') ? 1 : 0; // Convert to integer (0 or 1)
+            // $is_popular_str = $_POST['is_popular'] ?? 'NO'; // Re-capture for POST
+            // $is_popular = ($is_popular_str === 'YES') ? 1 : 0; // Convert to integer (0 or 1)
+            // Capture integer from POST directly
+            $is_popular = filter_var($_POST['is_popular'] ?? 0, FILTER_VALIDATE_INT);
+            // Pastikan nilai hanya 0 atau 1
+            $is_popular = ($is_popular === 1) ? 1 : 0;
             $creatorId = Session::get('user')['id']; // AMBIL ID PENGGUNA DARI SESI
 
-            if (empty($title) || empty($description) || empty($releaseYear)) {
-                $message = 'Judul, deskripsi, dan tahun rilis tidak boleh kosong.';
-                $messageType = 'error';
-            } elseif ($releaseYear === false || $releaseYear <= 0) {
-                $message = 'Tahun rilis harus berupa angka valid.';
-                $messageType = 'error';
-            } else {
+            // Server-side validation
+            if (empty($title)) {
+                $error['title'] = 'Judul series tidak boleh kosong.';
+            }
+
+            if (empty($description)) {
+                $error['description'] = 'Deskripsi series tidak boleh kosong.';
+            }
+
+            // Validation for release year
+            if ($releaseYear === false || $releaseYear <= 0) {
+                $error['release_year'] = 'Tahun rilis harus berupa angka valid.';
+            } elseif ($releaseYear > date('Y')) { // Check if year is in the future
+                $error['release_year'] = 'Tahun rilis tidak boleh lebih dari tahun sekarang (' . date('Y') . ').';
+            } elseif ($releaseYear < 1888) { // Optional: minimum year
+                $error['release_year'] = 'Tahun rilis terlalu lama.';
+            }
+
+            if (!empty($imageUrl) && !filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+                $error['image_url'] = 'Format URL gambar tidak valid.';
+            }
+
+            if (empty($error)) {
                 // Pass the converted integer value for is_popular and creatorId
                 if ($this->seriesModel->create($title, $description, $releaseYear, $imageUrl, $is_popular, $creatorId)) {
                     $message = 'Series berhasil ditambahkan!';
                     $messageType = 'success';
-                    redirect('/daftar_series?message=' . urlencode($message) . '&type=' . urlencode($messageType));
+                    redirect('/daftar_series?message=' . urlencode($message) . '&type=' . urlencode($messageType)); //
                     exit();
                 } else {
                     $message = 'Gagal menambahkan series.';
                     $messageType = 'error';
                 }
+            } else {
+                $message = 'Mohon perbaiki kesalahan dalam formulir.';
+                $messageType = 'error';
             }
         }
 
@@ -161,9 +190,62 @@ class SeriesController {
                 'description' => $description,
                 'release_year' => $releaseYear,
                 'image_url' => $imageUrl,
-                'is_popular' => $is_popular
-            ]
+                'is_popular' => $is_popular // Pass the value back for sticky form
+            ],
+            'error' => $error // Pass the error array to the view
         ]);
+    }
+
+    /**
+     * Endpoint AJAX untuk validasi field (misal: tahun rilis).
+     */
+    public function validateFieldAjax() {
+        header('Content-Type: application/json');
+        $field = $_POST['field'] ?? '';
+        $value = $_POST['value'] ?? '';
+        $isValid = true;
+        $errorMessage = '';
+
+        switch ($field) {
+            case 'release_year':
+                $year = filter_var($value, FILTER_VALIDATE_INT);
+                if ($value === '') { // Check for empty string specifically
+                    $isValid = false;
+                    $errorMessage = 'Tahun rilis tidak boleh kosong.';
+                } elseif ($year === false || $year <= 0) {
+                    $isValid = false;
+                    $errorMessage = 'Tahun rilis harus berupa angka valid.';
+                } elseif ($year > date('Y')) {
+                    $isValid = false;
+                    $errorMessage = 'Tahun rilis tidak boleh lebih dari tahun sekarang (' . date('Y') . ').';
+                } elseif ($year < 1888) { // Optional: minimum year
+                    $isValid = false;
+                    $errorMessage = 'Tahun rilis terlalu lama.';
+                }
+                break;
+            case 'title':
+                if (empty($value)) {
+                    $isValid = false;
+                    $errorMessage = 'Judul series tidak boleh kosong.';
+                }
+                // You can add uniqueness check here if necessary
+                break;
+            case 'description':
+                if (empty($value)) {
+                    $isValid = false;
+                    $errorMessage = 'Deskripsi series tidak boleh kosong.';
+                }
+                break;
+            case 'image_url':
+                if (!empty($value) && !filter_var($value, FILTER_VALIDATE_URL)) {
+                    $isValid = false;
+                    $errorMessage = 'Format URL gambar tidak valid.';
+                }
+                break;
+        }
+
+        echo json_encode(['isValid' => $isValid, 'message' => $errorMessage]);
+        exit();
     }
 
     /**
@@ -176,7 +258,7 @@ class SeriesController {
         $series = $this->seriesModel->findById($id);
 
         if (!$series) {
-            redirect('/daftar_series?message=' . urlencode('Series tidak ditemukan.') . '&type=error');
+            redirect('/daftar_series?message=' . urlencode('Series tidak ditemukan.') . '&type=error'); //
         }
 
         $message = null;
@@ -188,9 +270,13 @@ class SeriesController {
             $description = trim($_POST['description'] ?? '');
             $releaseYear = filter_var($_POST['release_year'] ?? '', FILTER_VALIDATE_INT);
             $imageUrl = trim($_POST['image_url'] ?? '');
-            $is_popular_str = $_POST['is_popular'] ?? 'NO'; // Capture string from POST
-            $is_popular = ($is_popular_str === 'YES') ? 1 : 0; // Convert to integer
-            $editorId = Session::get('user')['id'];
+            // $is_popular_str = $_POST['is_popular'] ?? 'NO'; // Capture string from POST
+            // $is_popular = ($is_popular_str === 'YES') ? 1 : 0; // Convert to integer
+            // Capture integer from POST directly
+            $is_popular = filter_var($_POST['is_popular'] ?? 0, FILTER_VALIDATE_INT);
+            // Pastikan nilai hanya 0 atau 1
+            $is_popular = ($is_popular === 1) ? 1 : 0;
+            $editorId = Session::get('user')['id']; //
 
             // Server-side validation
             if (empty($title)) {
@@ -205,8 +291,10 @@ class SeriesController {
 
             if ($releaseYear === false || $releaseYear <= 0) {
                 $error['release_year'] = 'Tahun rilis harus berupa angka valid.';
-            } elseif ($releaseYear < 1888 || $releaseYear > date('Y') + 5) {
-                $error['release_year'] = 'Tahun rilis tidak valid (contoh: 1888 - ' . (date('Y') + 5) . ').';
+            } elseif ($releaseYear > date('Y')) { // Added year validation
+                $error['release_year'] = 'Tahun rilis tidak boleh lebih dari tahun sekarang (' . date('Y') . ').';
+            } elseif ($releaseYear < 1888) { // Optional: minimum year
+                $error['release_year'] = 'Tahun rilis tidak valid (minimal 1888).';
             }
 
             if (!empty($imageUrl) && !filter_var($imageUrl, FILTER_VALIDATE_URL)) {
@@ -218,8 +306,10 @@ class SeriesController {
                 if ($this->seriesModel->update($id, $title, $description, $releaseYear, $imageUrl, $is_popular, $editorId)) {
                     $message = 'Series berhasil diperbarui!';
                     $messageType = 'success';
-                    $series = $this->seriesModel->findById($id); // Refresh data series
-                    redirect('/daftar_series/show/' . $id . '?message=' . urlencode($message) . '&type=' . urlencode($messageType));
+                    // $series = $this->seriesModel->findById($id); // Refresh data series
+                    // redirect('/daftar_series/show/' . $id . '?message=' . urlencode($message) . '&type=' . urlencode($messageType)); //
+                    // exit();
+                    redirect('/daftar_series?message=' . urlencode($message) . '&type=' . urlencode($messageType));
                     exit();
                 } else {
                     $message = 'Gagal memperbarui series.';
@@ -257,7 +347,7 @@ class SeriesController {
         $series = $this->seriesModel->findById($id);
 
         if (!$series) {
-            redirect('/daftar_series?message=' . urlencode('Series tidak ditemukan.') . '&type=error');
+            redirect('/daftar_series?message=' . urlencode('Series tidak ditemukan.') . '&type=error'); //
         }
 
         $message = '';
@@ -270,6 +360,6 @@ class SeriesController {
             $message = 'Gagal menghapus series.';
             $messageType = 'error';
         }
-        redirect('/daftar_series?message=' . urlencode($message) . '&type=' . urlencode($messageType));
+        redirect('/daftar_series?message=' . urlencode($message) . '&type=' . urlencode($messageType)); //
     }
 }

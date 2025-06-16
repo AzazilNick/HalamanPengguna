@@ -57,9 +57,6 @@ class CommentRating {
 
         $rootEntries = [];
         foreach ($entriesById as $entry) {
-            // A rating will have rating_value IS NOT NULL and parent_comment_id IS NULL
-            // A top-level comment will have rating_value IS NULL and parent_comment_id IS NULL
-            // A reply will have parent_comment_id IS NOT NULL
             if ($entry['parent_comment_id'] === null) {
                 $rootEntries[] = &$entriesById[$entry['id']];
             } else {
@@ -185,7 +182,12 @@ class CommentRating {
      * @return array|false
      */
     public function findById($id) {
-        $stmt = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = :id");
+        $stmt = $this->pdo->prepare("
+            SELECT cr.*, u.username AS commenter_username, u.foto_pengguna AS commenter_photo
+            FROM {$this->table} cr
+            JOIN user u ON cr.user_id = u.id
+            WHERE cr.id = :id
+        ");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch();
@@ -222,5 +224,29 @@ class CommentRating {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM likes WHERE user_id = :user_id AND item_id = :item_id AND item_type = 'comment'");
         $stmt->execute([':user_id' => $userId, ':item_id' => $commentId]);
         return $stmt->fetchColumn() > 0;
+    }
+
+    /**
+     * Mengambil total komentar dan rating untuk sebuah item.
+     * @param int $itemId
+     * @param string $itemType
+     * @return int
+     */
+    public function getTotalCommentsRatings($itemId, $itemType) {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM {$this->table} WHERE item_id = :item_id AND item_type = :item_type");
+        $stmt->execute([':item_id' => $itemId, ':item_type' => $itemType]);
+        return $stmt->fetchColumn();
+    }
+
+    /**
+     * Mengambil rata-rata rating untuk sebuah item.
+     * @param int $itemId
+     * @param string $itemType
+     * @return float
+     */
+    public function getAverageRating($itemId, $itemType) {
+        $stmt = $this->pdo->prepare("SELECT COALESCE(AVG(rating_value), 0) FROM {$this->table} WHERE item_id = :item_id AND item_type = :item_type AND rating_value IS NOT NULL");
+        $stmt->execute([':item_id' => $itemId, ':item_type' => $itemType]);
+        return (float) $stmt->fetchColumn();
     }
 }

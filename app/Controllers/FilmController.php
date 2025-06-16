@@ -37,7 +37,7 @@ class FilmController {
         // Ambil film populer (ID 1-8)
         $popularFilm = $this->filmModel->getPopularFilm(); // Teruskan userId
         // Ambil semua film
-        $allFilm = $this->filmModel->getAllFilm($currentUserId); // Teruskan userId
+        $allFilm = $this->filmModel->getAllFilms($currentUserId); // Teruskan userId
 
         // Tangani pesan dari parameter URL
         $message = $_GET['message'] ?? null;
@@ -94,6 +94,11 @@ class FilmController {
      * @param int $id ID film
      */
     public function show($id) {
+        // Pastikan pengguna sudah login
+        if (!Session::has('user')) {
+            redirect('/auth/login');
+        }
+
         $film = $this->filmModel->findById($id);
 
         if (!$film) {
@@ -106,7 +111,7 @@ class FilmController {
         ]);
     }
 
-        /**
+    /**
      * Menampilkan formulir untuk membuat film baru atau memproses submission.
      */
     public function create() {
@@ -134,23 +139,42 @@ class FilmController {
             $is_popular = ($is_popular === 1) ? 1 : 0;
             $creatorId = Session::get('user')['id']; // AMBIL ID PENGGUNA DARI SESI
 
-            if (empty($title) || empty($description) || empty($releaseYear)) {
-                $message = 'Judul, deskripsi, dan tahun rilis tidak boleh kosong.';
-                $messageType = 'error';
-            } elseif ($releaseYear === false || $releaseYear <= 0) {
-                $message = 'Tahun rilis harus berupa angka valid.';
-                $messageType = 'error';
-            } else {
+            // Server-side validation
+            if (empty($title)) {
+                $error['title'] = 'Judul film tidak boleh kosong.';
+            }
+
+            if (empty($description)) {
+                $error['description'] = 'Deskripsi film tidak boleh kosong.';
+            }
+
+            // Validation for release year
+            if ($releaseYear === false || $releaseYear <= 0) {
+                $error['release_year'] = 'Tahun rilis harus berupa angka valid.';
+            } elseif ($releaseYear > date('Y')) { // Check if year is in the future
+                $error['release_year'] = 'Tahun rilis tidak boleh lebih dari tahun sekarang (' . date('Y') . ').';
+            } elseif ($releaseYear < 1888) { // Optional: minimum year
+                $error['release_year'] = 'Tahun rilis terlalu lama.';
+            }
+
+            if (!empty($imageUrl) && !filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+                $error['image_url'] = 'Format URL gambar tidak valid.';
+            }
+
+            if (empty($error)) {
                 // Pass the converted integer value for is_popular and creatorId
                 if ($this->filmModel->create($title, $description, $releaseYear, $imageUrl, $is_popular, $creatorId)) {
-                    $message = 'Film berhasil ditambahkan!';
+                    $message = 'film berhasil ditambahkan!';
                     $messageType = 'success';
-                    redirect('/daftar_film?message=' . urlencode($message) . '&type=' . urlencode($messageType));
+                    redirect('/daftar_film?message=' . urlencode($message) . '&type=' . urlencode($messageType)); //
                     exit();
                 } else {
                     $message = 'Gagal menambahkan film.';
                     $messageType = 'error';
                 }
+            } else {
+                $message = 'Mohon perbaiki kesalahan dalam formulir.';
+                $messageType = 'error';
             }
         }
 
@@ -164,11 +188,64 @@ class FilmController {
                 'release_year' => $releaseYear,
                 'image_url' => $imageUrl,
                 'is_popular' => $is_popular
-            ]
+            ],
+            'error' => $error // Pass the error array to the view
         ]);
     }
 
-        /**
+    /**
+     * Endpoint AJAX untuk validasi field (misal: tahun rilis).
+     */
+     public function validateFieldAjax() {
+        header('Content-Type: application/json');
+        $field = $_POST['field'] ?? '';
+        $value = $_POST['value'] ?? '';
+        $isValid = true;
+        $errorMessage = '';
+
+        switch ($field) {
+            case 'release_year':
+                $year = filter_var($value, FILTER_VALIDATE_INT);
+                if ($value === '') { // Check for empty string specifically
+                    $isValid = false;
+                    $errorMessage = 'Tahun rilis tidak boleh kosong.';
+                } elseif ($year === false || $year <= 0) {
+                    $isValid = false;
+                    $errorMessage = 'Tahun rilis harus berupa angka valid.';
+                } elseif ($year > date('Y')) {
+                    $isValid = false;
+                    $errorMessage = 'Tahun rilis tidak boleh lebih dari tahun sekarang (' . date('Y') . ').';
+                } elseif ($year < 1888) { // Optional: minimum year
+                    $isValid = false;
+                    $errorMessage = 'Tahun rilis terlalu lama.';
+                }
+                break;
+            case 'title':
+                if (empty($value)) {
+                    $isValid = false;
+                    $errorMessage = 'Judul film tidak boleh kosong.';
+                }
+                // You can add uniqueness check here if necessary
+                break;
+            case 'description':
+                if (empty($value)) {
+                    $isValid = false;
+                    $errorMessage = 'Deskripsi film tidak boleh kosong.';
+                }
+                break;
+            case 'image_url':
+                if (!empty($value) && !filter_var($value, FILTER_VALIDATE_URL)) {
+                    $isValid = false;
+                    $errorMessage = 'Format URL gambar tidak valid.';
+                }
+                break;
+        }
+
+        echo json_encode(['isValid' => $isValid, 'message' => $errorMessage]);
+        exit();
+    }
+
+    /**
      * Menampilkan formulir untuk mengedit film yang sudah ada atau memproses submission.
      * @param int $id ID film
      */

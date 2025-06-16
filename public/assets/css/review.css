@@ -1,9 +1,15 @@
+body {
+    background: url('https://www.notebookcheck.net/fileadmin/Notebooks/News/_nc3/netflixteaser.png') no-repeat center center fixed;
+    background-size: cover;
+    animation: backgroundMove 10s ease-in-out infinite;
+}
+
 .review-container,
 .form-container {
     max-width: 900px;
-    margin: 80px auto;
+    margin: 20px auto;
     padding: 30px;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.9);
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     color: white;

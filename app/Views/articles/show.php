@@ -163,57 +163,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const commentFormAjax = document.getElementById('comment-form-ajax');
     const commentTextInputArticle = document.getElementById('comment_text_article');
     const parentCommentIdInputArticle = document.getElementById('parent-comment-id-article');
-    const commentLabelArticle = document.getElementById('comment-label-article');
+    const commentLabelArticle = document.getElementById('comment-label-article'); // Ini tidak ada di HTML Anda, akan saya tambahkan komentar di bawah.
     const cancelReplyArticleButton = document.getElementById('cancel-reply-article');
     const commentsListContainer = document.querySelector('.comments-list-container');
     const noCommentsMessage = document.getElementById('no-comments-message');
     const commentCountSpan = document.getElementById('comment-count');
     const articleId = commentFormAjax.querySelector('input[name="item_id"]').value;
-    const articleAuthorId = <?= json_encode($article['user_id']) ?>; // Get article author ID
+    const articleAuthorId = <?= json_encode($article['user_id']) ?>;
     const currentUserId = <?= json_encode(Session::get('user')['id'] ?? null) ?>;
     const currentUserIsAdmin = <?= json_encode(Session::get('user')['is_admin'] ?? 0) ?>;
 
-
-    // Function to create a new comment HTML element
-    const createCommentElement = (comment) => {
-        const commentItem = document.createElement('div');
-        commentItem.classList.add('comment-item');
-        commentItem.id = `comment-${comment.id}`;
-
-        const basePath = BASE_URL; // Assume BASE_URL is defined globally from header.php
-
-        const commenterPhotoUrl = `${basePath}/uploads/profile_photos/${comment.commenter_photo || 'default.png'}`;
-
-        commentItem.innerHTML = `
-            <div class="comment-header">
-                <img src="${commenterPhotoUrl}" alt="Commenter Photo" class="commenter-photo-thumb">
-                <p class="comment-author"><strong>${escapeHTML(comment.commenter_username)}</strong></p>
-                <p class="comment-date">${new Date(comment.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-            </div>
-            <p class="comment-text">${nl2br(escapeHTML(comment.comment_text))}</p>
-            <div class="comment-actions">
-                <button class="btn-reply" data-comment-id="${escapeHTML(comment.id)}" data-comment-user="${escapeHTML(comment.commenter_username)}">Balas</button>
-                ${(currentUserId == comment.user_id || currentUserId == articleAuthorId || currentUserIsAdmin == 1) ?
-                    `<a href="${basePath}/comment/delete/${escapeHTML(comment.id)}" onclick="return confirm('Yakin ingin menghapus komentar ini?')" class="btn-delete">Hapus</a>` : ''
-                }
-            </div>
-        `;
-
-        // Add event listener for reply button on the newly created comment
-        commentItem.querySelector('.btn-reply').addEventListener('click', (e) => {
-            const replyButton = e.target;
-            const commentId = replyButton.dataset.commentId;
-            const commentUser = replyButton.dataset.commentUser;
-
-            parentCommentIdInputArticle.value = commentId;
-            commentLabelArticle.textContent = `Balas Komentar @${commentUser}:`;
-            commentTextInputArticle.placeholder = `Tulis balasan untuk @${commentUser} di sini...`;
-            commentTextInputArticle.focus();
-            cancelReplyArticleButton.style.display = 'inline-block';
-        });
-
-        return commentItem;
-    };
 
     // Helper function for nl2br (from PHP's nl2br)
     function nl2br(str) {
@@ -226,6 +185,60 @@ document.addEventListener('DOMContentLoaded', () => {
         div.appendChild(document.createTextNode(str));
         return div.innerHTML;
     }
+
+    // Function to set up reply button event listener
+    const setupReplyButton = (button) => {
+        button.addEventListener('click', (e) => {
+            const replyButton = e.target;
+            const commentId = replyButton.dataset.commentId;
+            const commentUser = replyButton.dataset.commentUser;
+
+            parentCommentIdInputArticle.value = commentId;
+            // Jika Anda tidak memiliki label terpisah, Anda mungkin ingin memodifikasi placeholder saja
+            // atau menambahkan elemen span untuk label balasan.
+            // Saat ini, Anda memiliki `commentLabelArticle` yang tidak ada di HTML.
+            // Mari kita asumsikan Anda ingin memodifikasi placeholder untuk kesederhanaan.
+            // Atau, tambahkan <span id="comment-label-article"></span> di HTML Anda jika ingin label terpisah.
+            commentTextInputArticle.placeholder = `Tulis balasan untuk @${commentUser} di sini...`;
+            commentTextInputArticle.focus();
+            cancelReplyArticleButton.style.display = 'inline-block';
+        });
+    };
+
+    // Function to create a new comment HTML element
+    const createCommentElement = (comment) => {
+        const commentItem = document.createElement('div');
+        commentItem.classList.add('comment-item');
+        commentItem.id = `comment-${comment.id}`;
+
+        const basePath = BASE_URL;
+
+        const commenterPhotoUrl = `${basePath}/uploads/profile_photos/${comment.commenter_photo || 'default.png'}`;
+        // Jika default.png tidak ada di uploads/profile_photos, coba di assets/img
+        // Ini perlu dilakukan di sisi PHP atau pastikan JS memiliki logika fallback yang benar
+        // Untuk saat ini, kita asumsikan path default.png konsisten atau difallback di PHP.
+        // Asumsi BASE_URL sudah didefinisikan dari PHP.
+
+        commentItem.innerHTML = `
+            <div class="comment-header">
+                <img src="${commenterPhotoUrl}" alt="Commenter Photo" class="commenter-photo-thumb">
+                <p class="comment-author"><strong>${escapeHTML(comment.commenter_username)}</strong></p>
+                <p class="comment-date">${new Date(comment.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+            </div>
+            <p class="comment-text">${nl2br(escapeHTML(comment.comment_text))}</p>
+            <div class="comment-actions">
+                <button type="button" class="btn-edit-global btn-reply" data-comment-id="${escapeHTML(comment.id)}" data-comment-user="${escapeHTML(comment.commenter_username)}">Balas</button>
+                ${(currentUserId == comment.user_id || currentUserId == articleAuthorId || currentUserIsAdmin == 1) ?
+                    `<a href="${basePath}/comment/delete/${escapeHTML(comment.id)}" onclick="return confirm('Yakin ingin menghapus komentar ini?')" class="btn-delete">Hapus</a>` : ''
+                }
+            </div>
+            <div class="comment-replies"></div> `;
+
+        // Setup event listener for the newly created reply button
+        setupReplyButton(commentItem.querySelector('.btn-reply'));
+
+        return commentItem;
+    };
 
 
     if (commentFormAjax) {
@@ -256,12 +269,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const result = await response.json();
 
-                if (result.success) {
-                    const notificationDiv = document.createElement('div');
-                    notificationDiv.classList.add('notification', 'success');
-                    notificationDiv.textContent = result.message;
-                    commentFormAjax.before(notificationDiv); // Display notification above the form
+                // Display notification based on AJAX result
+                const notificationDiv = document.createElement('div');
+                notificationDiv.classList.add('notification', result.success ? 'success' : 'error');
+                notificationDiv.textContent = result.message;
+                commentFormAjax.before(notificationDiv); // Display notification above the form
 
+                if (result.success) {
                     // Add new comment to the UI
                     if (result.comment) {
                         const newCommentElement = createCommentElement(result.comment);
@@ -279,7 +293,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         } else {
                             // Append as a top-level comment
-                            commentsListContainer.prepend(newCommentElement); // Add to the top
+                            // Find the correct place to prepend to maintain order (most recent at top, if desired)
+                            // Or, if comments are rendered oldest first, append.
+                            // Currently, renderArticleComments orders by created_at ASC, so new comments should be appended
+                            commentsListContainer.appendChild(newCommentElement);
                             if (noCommentsMessage) {
                                 noCommentsMessage.style.display = 'none'; // Hide "No comments" message
                             }
@@ -294,15 +311,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Reset form fields
                     commentTextInputArticle.value = '';
                     parentCommentIdInputArticle.value = '';
-                    commentLabelArticle.textContent = 'Tulis komentar Anda di sini:';
+                    // Reset placeholder for comment input
                     commentTextInputArticle.placeholder = 'Tulis komentar Anda di sini...';
+                    // Hide cancel reply button
                     cancelReplyArticleButton.style.display = 'none';
 
                 } else {
-                    const notificationDiv = document.createElement('div');
-                    notificationDiv.classList.add('notification', 'error');
-                    notificationDiv.textContent = result.message;
-                    commentFormAjax.before(notificationDiv); // Display notification above the form
                     // If user not logged in, redirect them
                     if (result.redirect) {
                         window.location.href = result.redirect;
@@ -312,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error:', error);
                 const notificationDiv = document.createElement('div');
                 notificationDiv.classList.add('notification', 'error');
-                notificationDiv.textContent = 'Terjadi kesalahan jaringan atau server.';
+                notificationDiv.textContent = 'Terjadi kesalahan jaringan atau server.'; // Generic error for network issues
                 commentFormAjax.before(notificationDiv);
             } finally {
                 submitButton.disabled = false;
@@ -320,25 +334,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Event listener for reply buttons
+        // Event listener for reply buttons already present in the HTML on initial load
         document.querySelectorAll('.btn-reply').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const replyButton = e.target;
-                const commentId = replyButton.dataset.commentId;
-                const commentUser = replyButton.dataset.commentUser;
-
-                parentCommentIdInputArticle.value = commentId;
-                commentLabelArticle.textContent = `Balas Komentar @${commentUser}:`;
-                commentTextInputArticle.placeholder = `Tulis balasan untuk @${commentUser} di sini...`;
-                commentTextInputArticle.focus();
-                cancelReplyArticleButton.style.display = 'inline-block';
-            });
+            setupReplyButton(button);
         });
 
         // Event listener for cancel reply button
         cancelReplyArticleButton.addEventListener('click', () => {
             parentCommentIdInputArticle.value = '';
-            commentLabelArticle.textContent = 'Tulis komentar Anda di sini:';
+            // Reset placeholder for comment input
             commentTextInputArticle.placeholder = 'Tulis komentar Anda di sini...';
             commentTextInputArticle.value = '';
             cancelReplyArticleButton.style.display = 'none';

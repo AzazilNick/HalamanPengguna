@@ -6,13 +6,19 @@ body {
     animation: backgroundMove 10s ease-in-out infinite;
 }
 
+@keyframes backgroundMove {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 2% 0%; }
+    100% { background-position: 0% 0%; }
+}
+
 .articles-container,
 .article-detail-container,
 .form-container {
     max-width: 900px;
     margin: 20px auto;
     padding: 30px;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     color: white;

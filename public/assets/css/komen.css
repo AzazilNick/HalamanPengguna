@@ -810,8 +810,8 @@ h1 {
     }
 
     .item-image {
-        height: auto; /* Adjust height automatically */
-        max-height: 400px;
+        height: 630px; /* Adjust height automatically */
+        padding: 50px 100px 0px 100px;
     }
 
     .item-details-content {
@@ -915,7 +915,153 @@ h1 {
     }
 
     .item-image {
-        max-height: 350px;
+        max-height: 555px;
+        max-width: 400px;
+        padding: 10px;
+    }
+
+    .item-details-content h1 {
+        font-size: 1.8em;
+    }
+
+    .item-description, .item-meta {
+        font-size: 0.95em;
+    }
+
+    .comments-section h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .comment-form {
+        padding: 15px;
+    }
+
+    .comment-form h3 {
+        font-size: 1.3em;
+    }
+
+    .comment-form .btn {
+        padding: 8px 15px;
+        font-size: 0.95em;
+    }
+
+    .comment-item {
+        padding: 10px;
+    }
+
+    .commenter-photo-thumb {
+        width: 40px;
+        height: 40px;
+    }
+
+    .comment-author {
+        font-size: 1em;
+    }
+
+    .comment-rating, .comment-likes, .comment-date, .comment-text {
+        font-size: 0.9em;
+    }
+
+    .comment-replies {
+        padding-left: 15px;
+    }
+
+
+}
+
+@media (max-width: 376px) {
+    .articles-container,
+    .article-detail-container {
+        padding: 15px;
+        margin: 15px auto;
+        border-radius: 5px;
+    }
+
+    .single-article {
+        gap: 20px;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+
+    .item-image-container {
+        width: 95%;
+    }
+
+    .item-image {
+        max-height: 500px;
+        max-width: 400px;
+    }
+
+    .item-details-content h1 {
+        font-size: 1.8em;
+    }
+
+    .item-description, .item-meta {
+        font-size: 0.95em;
+    }
+
+    .comments-section h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .comment-form {
+        padding: 15px;
+    }
+
+    .comment-form h3 {
+        font-size: 1.3em;
+    }
+
+    .comment-form .btn {
+        padding: 8px 15px;
+        font-size: 0.95em;
+    }
+
+    .comment-item {
+        padding: 10px;
+    }
+
+    .commenter-photo-thumb {
+        width: 40px;
+        height: 40px;
+    }
+
+    .comment-author {
+        font-size: 1em;
+    }
+
+    .comment-rating, .comment-likes, .comment-date, .comment-text {
+        font-size: 0.9em;
+    }
+
+    .comment-replies {
+        padding-left: 15px;
+    }
+}
+
+@media (max-width: 321px) {
+    .articles-container,
+    .article-detail-container {
+        padding: 15px;
+        margin: 15px auto;
+        border-radius: 5px;
+    }
+
+    .single-article {
+        gap: 20px;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+
+    .item-image-container {
+        width: 95%;
+    }
+
+    .item-image {
+        max-height: 400px;
+        max-width: 400px;
     }
 
     .item-details-content h1 {

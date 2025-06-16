@@ -1,12 +1,26 @@
 /* niflix_project/public/assets/css/admin.css */
 
+body {
+    background: url('https://www.notebookcheck.net/fileadmin/Notebooks/News/_nc3/netflixteaser.png') no-repeat center center fixed;
+    background-size: cover;
+    animation: backgroundMove 10s ease-in-out infinite;
+}
+
+@keyframes backgroundMove {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 2% 0%; }
+    100% { background-position: 0% 0%; }
+}
+
 /* Container for admin pages */
 .admin-container {
     padding: 20px;
-    background: #111;
+    background: rgba(0, 0, 0, 0.9);
     color: white;
     min-height: calc(100vh - 120px);
-    margin-top: 20px; /* Adjust as needed, less if main has padding-top */
+    margin: 15px;
+    border-radius: 20px;
+
 }
 
 .admin-container h1 {

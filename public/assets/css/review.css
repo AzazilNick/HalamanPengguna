@@ -1,9 +1,7 @@
 .review-container,
-.article-detail-container,
-.articles-container,
 .form-container {
     max-width: 900px;
-    margin: 20px auto;
+    margin: 80px auto;
     padding: 30px;
     background: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
@@ -12,8 +10,6 @@
 }
 
 .review-container h2,
-.article-detail-container h1,
-.articles-container h1,
 .form-container h1 {
     color: #ffcc00;
     text-align: center;
@@ -38,6 +34,53 @@
 
 .review-container .add-review-link:hover {
     background: #e6b800;
+}
+
+.review-item {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.user-photo-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.review-content {
+    flex-grow: 1;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.review-meta {
+    font-size: 14px;
+    color: #ccc;
+}
+
+.review-text {
+    margin: 8px 0;
+    font-size: 15px;
+}
+
+.review-actions a {
+    color: #ffcc00;
+    text-decoration: none;
+}
+.review-actions a:hover {
+    text-decoration: underline;
 }
 
 /* Tombol kembali di show.php */
@@ -88,7 +131,7 @@
 
 /* Link dalam review */
 .review-container li a {
-    color: #2196F3;
+    color: #ffcc00;
     text-decoration: none;
 }
 

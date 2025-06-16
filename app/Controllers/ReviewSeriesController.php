@@ -17,9 +17,16 @@ class ReviewSeriesController {
     }
 
     public function index() {
+        // Pastikan pengguna sudah login
+        if (!Session::has('user')) {
+            redirect('/auth/login');
+        }
+
         $reviews = $this->reviewSeriesModel->all(); 
+        
         view('review_series/index', [
             'reviews' => $reviews,
+            'currentUser' => Session::get('user'), // Kirim data user ke view
             'title' => 'Daftar Review Series'
         ]);
     }

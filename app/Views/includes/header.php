@@ -7,6 +7,21 @@ if ($basePath === '/') {
 } else {
     $basePath = rtrim($basePath, '/');
 }
+
+// Ensure Session is available for current user data
+if (!class_exists('Session')) {
+    require_once APP_ROOT . '/app/Core/Session.php';
+}
+
+$currentUserSession = Session::get('user');
+$currentUserId = $currentUserSession['id'] ?? 'null'; // Use 'null' string if not set for JS
+$currentUserIsAdmin = $currentUserSession['is_admin'] ?? '0'; // Use '0' string if not set for JS
+
+$articleAuthorId = 'null'; // Default value
+if (isset($article) && isset($article['user_id'])) { // Only if $article variable is passed to the view
+    $articleAuthorId = $article['user_id'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +59,7 @@ if ($basePath === '/') {
     } elseif (in_array('review_series', $pathSegments)) { // Keep existing
         $pageCss = 'review.css';
     } elseif (in_array('komentar_rating', $pathSegments)) { // New
-        $pageCss = 'review.css'; // Reusing review.css, adjust if you want a new one
+        $pageCss = 'komen.css'; // Reusing review.css, adjust if you want a new one
     }
 
     if ($pageCss) {

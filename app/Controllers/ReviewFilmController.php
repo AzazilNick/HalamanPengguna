@@ -18,10 +18,16 @@ class ReviewFilmController {
     }
 
     public function index() {
-        $reviews = $this->reviewFilmModel->all(); 
+        if (!Session::has('user')) {
+            redirect('/auth/login');
+        }
+
+        $reviews = $this->reviewFilmModel->all();
+        
         view('review_films/index', [
             'reviews' => $reviews,
-            'title' => 'Daftar Review Film'
+            'title' => 'Daftar Review Film',
+            'currentUser' => Session::get('user') // Kirim data user lengkap
         ]);
     }
 

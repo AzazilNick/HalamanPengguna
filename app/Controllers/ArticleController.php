@@ -95,7 +95,7 @@ class ArticleController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title = trim($_POST['title'] ?? '');
             $content = trim($_POST['content'] ?? '');
-            $userId = Session::get('user')['id'];
+            $userId = Session::get('user')['id'];   
 
             if (empty($title) || empty($content)) {
                 $message = 'Judul dan konten tidak boleh kosong.';

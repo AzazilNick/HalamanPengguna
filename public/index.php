@@ -123,6 +123,19 @@ if (!empty($uriSegments[0])) { //
                 $controllerName = 'FilmController'; //
                 $controllerFilePath = APP_ROOT . '/app/Controllers/FilmController.php'; //
                 array_shift($uriSegments); // Hapus array 'daftar_film' //
+
+                // Handle AJAX for series likes
+                if (!empty($uriSegments[0]) && $uriSegments[0] === 'toggleLikeAjax') { //
+                    $actionName = 'toggleLikeAjax'; //
+                    array_shift($uriSegments); // Remove 'toggleLikeAjax' //
+                    $routeHandled = true; //
+                }
+                // Handle AJAX for field validation
+                if (!empty($uriSegments[0]) && $uriSegments[0] === 'validateFieldAjax') {
+                    $actionName = 'validateFieldAjax';
+                    array_shift($uriSegments); // Remove 'validateFieldAjax'
+                    $routeHandled = true;
+                }
                 break;
             case 'review_films': // Keep these for existing Review Film functionality //
                 $controllerName = 'ReviewFilmController'; //

@@ -129,7 +129,6 @@ function renderArticleComments($entries, $basePath, $article_id, $currentUser, $
                             <input type="hidden" name="item_type" value="article">
                             <input type="hidden" name="parent_comment_id" id="parent-comment-id-article" value="">
 
-                            <label for="comment_text" id="comment-label-article">Tulis komentar Anda di sini:</label>
                             <textarea name="comment_text" id="comment_text_article" placeholder="Tulis komentar Anda di sini..." rows="5" required></textarea>
                             <button type="submit" class="btn">Kirim Komentar</button>
                             <button type="button" id="cancel-reply-article" class="btn btn-cancel" style="display:none;">Batal Balasan</button>

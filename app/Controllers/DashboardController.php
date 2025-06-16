@@ -3,8 +3,8 @@
 
 require_once APP_ROOT . '/app/Core/Session.php';
 require_once APP_ROOT . '/app/Core/Functions.php';
-require_once APP_ROOT . '/app/Models/Film.php';   // Tambahkan baris ini
-require_once APP_ROOT . '/app/Models/Series.php'; // Tambahkan baris ini
+require_once APP_ROOT . '/app/Models/Film.php';  
+require_once APP_ROOT . '/app/Models/Series.php';
 
 class DashboardController {
     private $pdo;
@@ -24,17 +24,17 @@ class DashboardController {
         }
 
         // Ambil data film dari database
-        $dbFilms = $this->filmModel->getAllFilms(); // Mengambil semua film dari database
+        $dbFilms = $this->filmModel->getAllFilm(); // Mengambil semua film dari database
 
         // Ambil data series dari database
         $dbSeries = $this->seriesModel->getAllSeries(); // Mengambil semua series dari database
 
         // Ubah struktur data agar sesuai dengan yang diharapkan oleh view (misal: 'image_url' menjadi 'image')
-        $movies = [];
-        foreach ($dbFilms as $film) {
-            $movies[] = [
-                "title" => $film['title'],
-                "image" => $film['image_url'] // Menggunakan 'image_url' dari database
+        $film = [];
+        foreach ($dbFilms as $f) {
+            $film[] = [
+                "title" => $f['title'],
+                "image" => $f['image_url'] // Menggunakan 'image_url' dari database
             ];
         }
 
@@ -48,7 +48,7 @@ class DashboardController {
 
         $data = [
             'user_username' => Session::get('user')['username'] ?? 'Guest',
-            'movies' => $movies,
+            'film' => $film,
             'series' => $series
         ];
 

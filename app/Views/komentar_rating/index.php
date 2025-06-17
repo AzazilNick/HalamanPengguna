@@ -22,18 +22,24 @@ if ($basePath === '/') {
         <section class="item-list-section">
             <h2>Film</h2>
             <?php if (!empty($films)): ?>
-                <div class="film-list article-list">
+                <div class="item-grid-container">
                     <?php foreach ($films as $film): ?>
-                        <div class="film-item article-item">
-                            <h2><a href="<?= $basePath ?>/komentar_rating/detail/film/<?= escape_html($film['id']) ?>"><?= escape_html($film['title']) ?></a></h2>
-                            <?php if (!empty($film['image_url'])): ?>
-                                <img src="<?= escape_html($film['image_url']) ?>" alt="<?= escape_html($film['title']) ?>" class="film-thumbnail">
-                            <?php endif; ?>
-                            <p class="film-meta">Tahun Rilis: <?= escape_html($film['release_year']) ?></p>
-                            <p class="film-meta">Rating Rata-rata: <strong><?= number_format($film['average_rating'], 1) ?>/10</strong></p>
-                            <p class="film-meta">Jumlah Komentar & Rating: <?= escape_html($film['total_comments_ratings']) ?></p>
-                            <p class="film-meta">Total Suka: <?= escape_html($film['total_likes']) ?></p>
-                            <a href="<?= $basePath ?>/komentar_rating/detail/film/<?= escape_html($film['id']) ?>" class="btn">Lihat Detail</a>
+                        <div class="item-card">
+                            <a href="<?= $basePath ?>/komentar_rating/detail/film/<?= escape_html($film['id']) ?>">
+                                <?php if (!empty($film['image_url'])): ?>
+                                    <img src="<?= escape_html($film['image_url']) ?>" alt="<?= escape_html($film['title']) ?>" class="item-thumbnail">
+                                <?php else: ?>
+                                    <img src="<?= $basePath ?>/assets/img/default_film_thumb.png" alt="No Image" class="item-thumbnail">
+                                <?php endif; ?>
+                                <div class="item-info">
+                                    <h3><?= escape_html($film['title']) ?> (<?= escape_html($film['release_year']) ?>)</h3>
+                                    <div class="item-stats">
+                                        <span class="stat-item"><i class='bx bxs-star'></i> <?= number_format($film['average_rating'], 1) ?>/10</span>
+                                        <span class="stat-item"><i class='bx bxs-message-dots'></i> <?= escape_html($film['total_comments_ratings']) ?></span>
+                                        <span class="stat-item"><i class='bx bxs-heart'></i> <?= escape_html($film['total_likes']) ?></span>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -45,21 +51,24 @@ if ($basePath === '/') {
         <section class="item-list-section">
             <h2>Series</h2>
             <?php if (!empty($series)): ?>
-                <div class="series-list">
+                <div class="item-grid-container">
                     <?php foreach ($series as $s): ?>
-                        <div class="series-item">
-                            <h2><a href="<?= $basePath ?>/komentar_rating/detail/series/<?= escape_html($s['id']) ?>"><?= escape_html($s['title']) ?></a></h2>
-                            <?php if (!empty($s['image_url'])): ?>
-                                <img src="<?= escape_html($s['image_url']) ?>" alt="<?= escape_html($s['title']) ?>" class="series-thumbnail">
-                            <?php else: ?>
-                                <img src="<?= $basePath ?>/assets/img/default_series_thumb.png" alt="No Image" class="series-thumbnail">
-                            <?php endif; ?>
-                            <p class="series-meta">Tahun Rilis: <?= escape_html($s['release_year']) ?></p>
-                            <p class="series-meta">Rating Rata-rata: <strong><?= number_format($s['average_rating'], 1) ?>/10</strong></p>
-                            <p class="series-meta">Jumlah Komentar & Rating: <?= escape_html($s['total_comments_ratings']) ?></p>
-                            <!-- <p class="series-meta">Jumlah Komentar: <?php //  escape_html($s['total_comments']) ?></p> -->
-                            <p class="series-meta">Total Suka: <?= escape_html($s['total_likes']) ?></p>
-                            <a href="<?= $basePath ?>/komentar_rating/detail/series/<?= escape_html($s['id']) ?>" class="btn">Lihat Detail</a>
+                        <div class="item-card">
+                            <a href="<?= $basePath ?>/komentar_rating/detail/series/<?= escape_html($s['id']) ?>">
+                                <?php if (!empty($s['image_url'])): ?>
+                                    <img src="<?= escape_html($s['image_url']) ?>" alt="<?= escape_html($s['title']) ?>" class="item-thumbnail">
+                                <?php else: ?>
+                                    <img src="<?= $basePath ?>/assets/img/default_series_thumb.png" alt="No Image" class="item-thumbnail">
+                                <?php endif; ?>
+                                <div class="item-info">
+                                    <h3><?= escape_html($s['title']) ?> (<?= escape_html($s['release_year']) ?>)</h3>
+                                    <div class="item-stats">
+                                        <span class="stat-item"><i class='bx bxs-star'></i> <?= number_format($s['average_rating'], 1) ?>/10</span>
+                                        <span class="stat-item"><i class='bx bxs-message-dots'></i> <?= escape_html($s['total_comments_ratings']) ?></span>
+                                        <span class="stat-item"><i class='bx bxs-heart'></i> <?= escape_html($s['total_likes']) ?></span>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     <?php endforeach; ?>
                 </div>

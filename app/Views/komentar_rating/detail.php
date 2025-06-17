@@ -38,7 +38,7 @@ function renderAllEntries($entries, $basePath, $item_type, $item_id, $currentUse
             }
             $isCommentLiked = $commentRatingModel->hasUserLiked($currentUser['id'], $entry['id']);
 
-            echo '<div class="comment-item" id="comment-' . escape_html($entry['id']) . '">';
+            echo '<div class="comment-item ' . ($entry['parent_comment_id'] ? 'is-reply' : '') . '" id="comment-' . escape_html($entry['id']) . '">';
             echo '<div class="comment-header">';
             echo '<img src="' . $commenterPhotoUrl . '" alt="Commenter Photo" class="commenter-photo-thumb">';
             echo '<p class="comment-author"><strong>' . escape_html($entry['commenter_username']) . '</strong></p>';
@@ -102,6 +102,8 @@ function renderAllEntries($entries, $basePath, $item_type, $item_id, $currentUse
             <h1><?= escape_html($item['title']) ?></h1>
             <?php if (!empty($item['image_url'])): ?>
                 <img src="<?= escape_html($item['image_url']) ?>" alt="<?= escape_html($item['title']) ?>" class="<?= $itemType ?>-full-image">
+            <?php else: ?>
+                <img src="<?= $basePath ?>/assets/img/default_film_series_thumb.png" alt="No Image" class="<?= $itemType ?>-full-image">
             <?php endif; ?>
             <p class="<?= $itemType ?>-meta">Tahun Rilis: <?= escape_html($item['release_year']) ?></p>
             <p class="<?= $itemType ?>-meta">Deskripsi: <?= nl2br(escape_html($item['description'])) ?></p>
@@ -136,8 +138,13 @@ function renderAllEntries($entries, $basePath, $item_type, $item_id, $currentUse
                     <input type="hidden" name="parent_comment_id" id="parent-comment-id" value="">
 
                     <div class="input-group">
-                        <label for="rating_value">Rating (1-10) (Opsional, kosongkan jika hanya komentar):</label>
-                        <input type="number" id="rating_value" name="rating_value" min="1" max="10" value="<?= escape_html($currentRating) ?>">
+                        <label for="rating_value" id="rating-label">Rating (1-10) (Opsional, kosongkan jika hanya komentar):</label>
+                        <div class="star-rating">
+                            <?php for ($i = 10; $i >= 1; $i--): ?>
+                                <input type="radio" id="star<?= $i ?>" name="rating_value" value="<?= $i ?>" <?= $currentRating == $i ? 'checked' : '' ?> />
+                                <label for="star<?= $i ?>" title="<?= $i ?> stars"></label>
+                            <?php endfor; ?>
+                        </div>
                     </div>
 
                     <div class="input-group">
@@ -184,7 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const commentTextInput = document.getElementById('comment_text');
     const commentLabel = document.getElementById('comment-label');
     const cancelReplyButton = document.getElementById('cancel-reply');
-    const ratingValueInput = document.getElementById('rating_value');
+    const ratingValueInputs = document.querySelectorAll('input[name="rating_value"]'); // Changed to select all radio buttons
+    const ratingLabel = document.getElementById('rating-label'); // Added for rating label
     const totalCommentsRatingsDisplay = document.getElementById('total-comments-ratings-display');
     const averageRatingDisplay = document.getElementById('average-rating-display');
     const noCommentsReviewsMessage = document.getElementById('no-comments-reviews-message');
@@ -194,11 +202,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentUserId = <?= json_encode(Session::get('user')['id'] ?? null) ?>;
     const currentUserIsAdmin = <?= json_encode(Session::get('user')['is_admin'] ?? 0) ?>;
 
+    const initialRating = <?= json_encode($currentRating) ?>; // Store initial rating for reset
+
 
     // Function to create a new comment/review HTML element for Komentar & Rating page
     const createCommentReviewElement = (comment, item_type, item_id) => {
         const commentItem = document.createElement('div');
         commentItem.classList.add('comment-item');
+        if (comment.parent_comment_id) {
+            commentItem.classList.add('is-reply');
+        }
         commentItem.id = `comment-${comment.id}`;
 
         const basePath = BASE_URL;
@@ -312,8 +325,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     commentLabel.textContent = 'Komentar/Ulasan Anda:';
                     commentTextInput.placeholder = 'Tulis komentar atau ulasan Anda di sini...';
                     cancelReplyButton.style.display = 'none';
-                    ratingValueInput.value = ''; // Clear rating field
-                    ratingValueInput.setAttribute('required', 'required'); // Restore required for top-level reviews
+                    
+                    // Reset star rating
+                    ratingValueInputs.forEach(radio => {
+                        radio.checked = false;
+                    });
+                    // Restore original required attribute for rating or clear it if it was a reply
+                    ratingLabel.textContent = 'Rating (1-10) (Opsional, kosongkan jika hanya komentar):';
 
 
                 } else {
@@ -348,8 +366,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 commentTextInput.placeholder = `Tulis balasan untuk @${commentUser} di sini...`;
                 commentTextInput.focus();
                 cancelReplyButton.style.display = 'inline-block';
-                ratingValueInput.value = ''; // Clear rating when replying
-                ratingValueInput.removeAttribute('required'); // Make rating optional for replies
+                
+                // Clear and hide rating for replies
+                ratingValueInputs.forEach(radio => {
+                    radio.checked = false;
+                });
+                ratingLabel.textContent = 'Rating (Tidak berlaku untuk balasan):'; // Change label
             });
         });
 
@@ -360,10 +382,16 @@ document.addEventListener('DOMContentLoaded', () => {
             commentTextInput.placeholder = 'Tulis komentar atau ulasan Anda di sini...';
             commentTextInput.value = '';
             cancelReplyButton.style.display = 'none';
-            ratingValueInput.setAttribute('required', 'required'); // Make rating required again for top-level
-            // Restore initial rating value if it was an edit form (not applicable for article comments without rating)
-            // For Komentar & Rating page, you might want to restore $currentRating if user was editing a review
-            ratingValueInput.value = '<?= escape_html($currentRating) ?>';
+            
+            // Restore initial rating and label
+            ratingLabel.textContent = 'Rating (1-10) (Opsional, kosongkan jika hanya komentar):';
+            if (initialRating > 0) {
+                document.getElementById(`star${initialRating}`).checked = true;
+            } else {
+                 ratingValueInputs.forEach(radio => {
+                    radio.checked = false;
+                });
+            }
         });
 
          // Event listener for comment like forms

@@ -189,7 +189,6 @@ class FilmController {
                 'image_url' => $imageUrl,
                 'is_popular' => $is_popular
             ],
-            'error' => $error // Pass the error array to the view
         ]);
     }
 

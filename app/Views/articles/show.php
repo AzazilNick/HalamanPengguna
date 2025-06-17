@@ -39,7 +39,12 @@ function renderArticleComments($entries, $basePath, $article_id, $currentUser, $
 
             echo '<div class="comment-actions">';
 
-            // Delete entry button (for author or admin or article author)
+            // Tombol Balas: Hanya tampil jika komentar BUKAN milik pengguna yang sedang login
+            if (isset($currentUser) && $currentUser['id'] != $entry['user_id']) {
+                echo '<button type="button" class="btn-edit-global btn-reply" data-comment-id="' . escape_html($entry['id']) . '" data-comment-user="' . escape_html($entry['commenter_username']) . '">Balas</button>';
+            }
+
+            // Tombol Hapus: Tampil jika komentar milik pengguna yang sedang login, penulis artikel, atau admin
             if (isset($currentUser) && ($currentUser['id'] == $entry['user_id'] || $currentUser['id'] == $article['user_id'] || $currentUser['is_admin'] == 1)) {
                 echo '<a href="' . $basePath . '/comment/delete/' . escape_html($entry['id']) . '" onclick="return confirm(\'Yakin ingin menghapus komentar ini?\')" class="btn-delete">Hapus</a>';
             }
@@ -108,6 +113,7 @@ function renderArticleComments($entries, $basePath, $article_id, $currentUser, $
 
                             <textarea name="comment_text" id="comment_text_article" placeholder="Tulis komentar Anda di sini..." rows="5" required></textarea>
                             <button type="submit" class="btn">Kirim Komentar</button>
+                            <button type="button" id="cancel-reply-article" class="btn btn-cancel" style="display:none;">Batal Balasan</button>
                         </form>
                     </div>
                 <?php endif; ?>
@@ -139,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const commentFormAjax = document.getElementById('comment-form-ajax');
     const commentTextInputArticle = document.getElementById('comment_text_article');
     const parentCommentIdInputArticle = document.getElementById('parent-comment-id-article');
-    const commentLabelArticle = document.getElementById('comment-label-article'); // Ini tidak ada di HTML Anda, akan saya tambahkan komentar di bawah.
+    // const commentLabelArticle = document.getElementById('comment-label-article'); // Ini tidak ada di HTML Anda
     const cancelReplyArticleButton = document.getElementById('cancel-reply-article');
     const commentsListContainer = document.querySelector('.comments-list-container');
     const noCommentsMessage = document.getElementById('no-comments-message');
@@ -194,15 +200,20 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <p class="comment-text">${nl2br(escapeHTML(comment.comment_text))}</p>
             <div class="comment-actions">
-                <button type="button" class="btn-edit-global btn-reply" data-comment-id="${escapeHTML(comment.id)}" data-comment-user="${escapeHTML(comment.commenter_username)}">Balas</button>
+                ${(currentUserId != comment.user_id) ? // Added condition for "Balas" button
+                    `<button type="button" class="btn-edit-global btn-reply" data-comment-id="${escapeHTML(comment.id)}" data-comment-user="${escapeHTML(comment.commenter_username)}">Balas</button>` : ''
+                }
                 ${(currentUserId == comment.user_id || currentUserId == articleAuthorId || currentUserIsAdmin == 1) ?
                     `<a href="${basePath}/comment/delete/${escapeHTML(comment.id)}" onclick="return confirm('Yakin ingin menghapus komentar ini?')" class="btn-delete">Hapus</a>` : ''
                 }
             </div>
             <div class="comment-replies"></div> `;
 
-        // Setup event listener for the newly created reply button
-        setupReplyButton(commentItem.querySelector('.btn-reply'));
+        // Setup event listener for the newly created reply button, only if it exists
+        const replyButton = commentItem.querySelector('.btn-reply');
+        if (replyButton) {
+            setupReplyButton(replyButton);
+        }
 
         return commentItem;
     };
@@ -259,7 +270,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                 repliesContainer.appendChild(newCommentElement);
                             }
                         } else {
-                            commentsListContainer.appendChild(newCommentElement);
+                            const commentsListActual = commentsListContainer.querySelector('.comments-list');
+                            if (commentsListActual) {
+                                commentsListActual.prepend(newCommentElement);
+                            } else {
+                                // If no comments list exists yet, create one and append
+                                const newCommentsListDiv = document.createElement('div');
+                                newCommentsListDiv.classList.add('comments-list');
+                                newCommentsListDiv.prepend(newCommentElement);
+                                commentsListContainer.appendChild(newCommentsListDiv);
+                            }
+
                             if (noCommentsMessage) {
                                 noCommentsMessage.style.display = 'none'; // Hide "No comments" message
                             }
@@ -289,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error:', error);
                 const notificationDiv = document.createElement('div');
                 notificationDiv.classList.add('notification', 'error');
-                notificationDiv.textContent = 'Terjadi kesalahan jaringan atau server.'; // Generic error for network issues
+                notificationDiv.textContent = 'Terjadi kesalahan jaringan atau server.';
                 commentFormAjax.before(notificationDiv);
             } finally {
                 submitButton.disabled = false;

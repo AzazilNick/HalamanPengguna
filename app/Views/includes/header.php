@@ -44,7 +44,7 @@ if ($basePath === '/') {
     } elseif (in_array('review_series', $pathSegments)) { // Keep existing
         $pageCss = 'review.css';
     } elseif (in_array('komentar_rating', $pathSegments)) { // New
-        $pageCss = 'review.css'; // Reusing review.css, adjust if you want a new one
+        $pageCss = 'komen.css'; // Reusing review.css, adjust if you want a new one
     }
 
     if ($pageCss) {
